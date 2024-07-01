@@ -2,23 +2,30 @@ import { AttributeModifier, Novice } from "../../../attributes";
 
 const warriorNovicePath = new Novice(
 	// Level 1
-	new AttributeModifier({
-		health: 5,
-		languages: ["Elvish"],
-		professions: ["Blacksmith"],
-		skills: [
-			{
-				name: "Catch Your Breath",
-				description:
-					"You can use an action or a triggered action on your turn to heal damage equal to your healing rate. Once you use this talent, you cannot use it again until after you complete a rest.",
-			},
-			{
-				name: "Weapon Training",
-				description:
-					"When attacking with a weapon, you make the attack roll with 1 boon.",
-			},
-		],
-	}),
+	new AttributeModifier(
+		{
+			health: 5,
+			languages: ["Elvish"],
+			professions: ["Blacksmith"],
+			skills: [
+				{
+					name: "Catch Your Breath",
+					description:
+						"You can use an action or a triggered action on your turn to heal damage equal to your healing rate. Once you use this talent, you cannot use it again until after you complete a rest.",
+				},
+				{
+					name: "Weapon Training",
+					description:
+						"When attacking with a weapon, you make the attack roll with 1 boon.",
+				},
+			],
+		},
+		{
+			count: 2,
+			increaseBy: 1,
+			defaultAttributes: ["strength", "agility"],
+		}
+	),
 	// Level 2
 	new AttributeModifier({
 		health: 5,

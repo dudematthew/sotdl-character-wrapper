@@ -28,23 +28,42 @@ export class Novice extends Path {
 		secondaryAttributes: secondaryAttributes
 	): void {
 		if (character.level >= 1) {
-			this.applyModifier(mainAttributes, secondaryAttributes, this.l1Mod);
+			this.applyModifier(
+				mainAttributes,
+				secondaryAttributes,
+				this.l1Mod,
+				character
+			);
 		}
 		if (character.level >= 2) {
-			this.applyModifier(mainAttributes, secondaryAttributes, this.l2Mod);
+			this.applyModifier(
+				mainAttributes,
+				secondaryAttributes,
+				this.l2Mod,
+				character
+			);
 		}
 		if (character.level >= 5) {
-			this.applyModifier(mainAttributes, secondaryAttributes, this.l5Mod);
+			this.applyModifier(
+				mainAttributes,
+				secondaryAttributes,
+				this.l5Mod,
+				character
+			);
 		}
 	}
 
 	private applyModifier(
 		mainAttributes: mainAttributes,
 		secondaryAttributes: secondaryAttributes,
-		modifier: AttributeModifier
+		modifier: AttributeModifier,
+		character: Character
 	) {
 		for (const key in modifier) {
-			if (modifier[key as keyof attributes] !== undefined) {
+			if (
+				modifier[key as keyof attributes] !== undefined &&
+				key !== "choices"
+			) {
 				const attributeKey = key as keyof attributes;
 				if (attributeKey in mainAttributes) {
 					(mainAttributes[
@@ -68,6 +87,14 @@ export class Novice extends Path {
 					}
 				}
 			}
+		}
+
+		// Apply attribute choices if present
+		if (modifier.choices) {
+			modifier.applyChoices(
+				mainAttributes,
+				character.getChoicesForLevel(character.level)
+			);
 		}
 	}
 }

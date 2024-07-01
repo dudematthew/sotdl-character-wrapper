@@ -17,6 +17,7 @@ export class Character {
 	public novicePath: Novice | null = null;
 	public expertPath: Expert | null = null;
 	public masterPath: Master | null = null;
+	private choices: { [level: number]: (keyof mainAttributes)[] } = {};
 
 	constructor(config: characterConfig, ancestry: Ancestry) {
 		this.name = config.name;
@@ -35,7 +36,6 @@ export class Character {
 				secondaryAttributes
 			);
 		}
-
 		if (this.expertPath) {
 			this.expertPath.applyModifiers(
 				this,
@@ -43,9 +43,6 @@ export class Character {
 				secondaryAttributes
 			);
 		}
-
-		this.ancestry.applyModifiers(this, mainAttributes, secondaryAttributes);
-
 		if (this.masterPath) {
 			this.masterPath.applyModifiers(
 				this,
@@ -146,5 +143,13 @@ export class Character {
 
 	levelUp() {
 		this.level++;
+	}
+
+	setChoicesForLevel(level: number, choices: (keyof mainAttributes)[]) {
+		this.choices[level] = choices;
+	}
+
+	getChoicesForLevel(level: number): (keyof mainAttributes)[] {
+		return this.choices[level] || [];
 	}
 }

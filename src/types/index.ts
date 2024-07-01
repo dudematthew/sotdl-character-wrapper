@@ -39,3 +39,9 @@ export type attributeCalculationRules = {
 		secondaryAttrs: secondaryAttributes
 	) => any;
 };
+
+export type AttributeChoice = {
+	count: number;
+	increaseBy: number;
+	defaultAttributes: (keyof mainAttributes)[];
+};

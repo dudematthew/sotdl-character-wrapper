@@ -2,108 +2,23 @@ import edwardCharacterFactory from "./instances/charactersFactories/edwardCharac
 
 const myCharacter = edwardCharacterFactory();
 
-console.log(
-	`Health (level ${myCharacter.level}): ${myCharacter.attributes.health}`
-);
-console.log(
-	`Defense (level ${myCharacter.level}): ${myCharacter.attributes.defense}`
-);
-console.log(
-	`Healing Rate (level ${myCharacter.level}): ${myCharacter.attributes.healingRate}`
-);
-console.log(
-	`Languages (level ${
-		myCharacter.level
-	}): ${myCharacter.attributes.languages.join(", ")}`
-);
-console.log(
-	`Professions (level ${
-		myCharacter.level
-	}): ${myCharacter.attributes.professions.join(", ")}`
-);
-console.log(
-	`Skills (level ${myCharacter.level}): ${myCharacter.attributes.skills
-		.map((skill) => skill.name)
-		.join(", ")}`
-);
-
-myCharacter.levelUp(); // level 1
-
-console.log(
-	`Health (level ${myCharacter.level}): ${myCharacter.attributes.health}`
-);
-console.log(
-	`Defense (level ${myCharacter.level}): ${myCharacter.attributes.defense}`
-);
-console.log(
-	`Healing Rate (level ${myCharacter.level}): ${myCharacter.attributes.healingRate}`
-);
-console.log(
-	`Languages (level ${
-		myCharacter.level
-	}): ${myCharacter.attributes.languages.join(", ")}`
-);
-console.log(
-	`Professions (level ${
-		myCharacter.level
-	}): ${myCharacter.attributes.professions.join(", ")}`
-);
-console.log(
-	`Skills (level ${myCharacter.level}): ${myCharacter.attributes.skills
-		.map((skill) => skill.name)
-		.join(", ")}`
-);
-
-myCharacter.levelUp(); // level 2
-
-console.log(
-	`Health (level ${myCharacter.level}): ${myCharacter.attributes.health}`
-);
-console.log(
-	`Defense (level ${myCharacter.level}): ${myCharacter.attributes.defense}`
-);
-console.log(
-	`Healing Rate (level ${myCharacter.level}): ${myCharacter.attributes.healingRate}`
-);
-console.log(
-	`Languages (level ${
-		myCharacter.level
-	}): ${myCharacter.attributes.languages.join(", ")}`
-);
-console.log(
-	`Professions (level ${
-		myCharacter.level
-	}): ${myCharacter.attributes.professions.join(", ")}`
-);
-console.log(
-	`Skills (level ${myCharacter.level}): ${myCharacter.attributes.skills
-		.map((skill) => skill.name)
-		.join(", ")}`
-);
-
-myCharacter.levelUp(); // level 3
-
-console.log(
-	`Health (level ${myCharacter.level}): ${myCharacter.attributes.health}`
-);
-console.log(
-	`Defense (level ${myCharacter.level}): ${myCharacter.attributes.defense}`
-);
-console.log(
-	`Healing Rate (level ${myCharacter.level}): ${myCharacter.attributes.healingRate}`
-);
-console.log(
-	`Languages (level ${
-		myCharacter.level
-	}): ${myCharacter.attributes.languages.join(", ")}`
-);
-console.log(
-	`Professions (level ${
-		myCharacter.level
-	}): ${myCharacter.attributes.professions.join(", ")}`
-);
-console.log(
-	`Skills (level ${myCharacter.level}): ${myCharacter.attributes.skills
-		.map((skill) => skill.name)
-		.join(", ")}`
-);
+for (let i = 0; i <= 4; i++) {
+	console.log(`Level ${myCharacter.level} =====================`);
+	console.log(`Strength: ${myCharacter.attributes.strength}`);
+	console.log(`Agility: ${myCharacter.attributes.agility}`);
+	console.log(`Intellect: ${myCharacter.attributes.intellect}`);
+	console.log(`Will: ${myCharacter.attributes.will}`);
+	console.log(`Health: ${myCharacter.attributes.health}`);
+	console.log(`Defense: ${myCharacter.attributes.defense}`);
+	console.log(`Healing Rate: ${myCharacter.attributes.healingRate}`);
+	console.log(`Speed: ${myCharacter.attributes.speed}`);
+	console.log(`Languages: ${myCharacter.attributes.languages}`);
+	console.log(`Professions: ${myCharacter.attributes.professions}`);
+	console.log(
+		`Skills: ${myCharacter.attributes.skills.map((s) => s.name).join(", ")}`
+	);
+	// FIXME: This is not working
+	console.log(`Choices: ${myCharacter.getChoicesForLevel(i)}`);
+	console.log(`=============================`);
+	myCharacter.levelUp();
+}

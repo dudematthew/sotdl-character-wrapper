@@ -2,29 +2,36 @@ import { AttributeModifier, Expert } from "../../../attributes";
 
 const assassinExpertPath = new Expert(
 	// Level 3
-	new AttributeModifier({
-		perception: 1,
-		health: 3,
-		languages: ["Dwarfish"],
-		professions: ["Assassin"],
-		skills: [
-			{
-				name: "Assassinate",
-				description:
-					"When a surprised creature or a creature from which you are hidden takes damage from your attack, it must make a Strength challenge roll. On a failure, it takes damage equal to its Health.",
-			},
-			{
-				name: "Disguise Expertise",
-				description:
-					"If you have a disguise kit, you can use an action to expend a use from the kit to don a disguise.",
-			},
-			{
-				name: "Quick Reflexes",
-				description:
-					"You can use a triggered action on your turn to hide or retreat.",
-			},
-		],
-	}),
+	new AttributeModifier(
+		{
+			perception: 1,
+			health: 3,
+			languages: ["Dwarfish"],
+			professions: ["Assassin"],
+			skills: [
+				{
+					name: "Assassinate",
+					description:
+						"When a surprised creature or a creature from which you are hidden takes damage from your attack, it must make a Strength challenge roll. On a failure, it takes damage equal to its Health.",
+				},
+				{
+					name: "Disguise Expertise",
+					description:
+						"If you have a disguise kit, you can use an action to expend a use from the kit to don a disguise.",
+				},
+				{
+					name: "Quick Reflexes",
+					description:
+						"You can use a triggered action on your turn to hide or retreat.",
+				},
+			],
+		},
+		{
+			count: 2,
+			increaseBy: 1,
+			defaultAttributes: ["agility", "intellect"],
+		}
+	),
 	// Level 6
 	new AttributeModifier({
 		health: 3,

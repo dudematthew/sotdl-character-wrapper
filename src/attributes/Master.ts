@@ -19,13 +19,19 @@ export class Master extends Path {
 		secondaryAttributes: secondaryAttributes
 	): void {
 		if (character.level >= 7) {
-			this.applyModifier(mainAttributes, secondaryAttributes, this.l7Mod);
+			this.applyModifier(
+				mainAttributes,
+				secondaryAttributes,
+				this.l7Mod,
+				character
+			);
 		}
 		if (character.level >= 10) {
 			this.applyModifier(
 				mainAttributes,
 				secondaryAttributes,
-				this.l10Mod
+				this.l10Mod,
+				character
 			);
 		}
 	}
@@ -33,10 +39,14 @@ export class Master extends Path {
 	private applyModifier(
 		mainAttributes: mainAttributes,
 		secondaryAttributes: secondaryAttributes,
-		modifier: AttributeModifier
+		modifier: AttributeModifier,
+		character: Character
 	) {
 		for (const key in modifier) {
-			if (modifier[key as keyof attributes] !== undefined) {
+			if (
+				modifier[key as keyof attributes] !== undefined &&
+				key !== "choices"
+			) {
 				const attributeKey = key as keyof attributes;
 				if (attributeKey in mainAttributes) {
 					(mainAttributes[
@@ -60,6 +70,14 @@ export class Master extends Path {
 					}
 				}
 			}
+		}
+
+		// Apply attribute choices if present
+		if (modifier.choices) {
+			modifier.applyChoices(
+				mainAttributes,
+				character.getChoicesForLevel(character.level)
+			);
 		}
 	}
 }

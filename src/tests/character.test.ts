@@ -14,6 +14,7 @@ describe("Character Attributes Calculation", () => {
 		character = edwardCharacterFactory();
 	});
 
+	// TODO: Add increment of attributes for ancestry
 	test("Initial level attributes", () => {
 		const attrs = character.attributes;
 		expect(attrs.health).toBe(10);
