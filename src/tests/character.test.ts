@@ -52,11 +52,14 @@ describe("Character Attributes Calculation", () => {
 		expect(attrs.healingRate).toBe(5);
 	});
 
+	// FIXME: Health and probably other stats are not applied here
+	// Ensure that the initial health calculation and the level 4 modifier application are correct.
 	test("Attributes after leveling up to level 4", () => {
 		levelUpBy(character, 4);
 		expect(character.level).toBe(4);
 		const attrs = character.attributes;
 		expect(attrs.health).toBe(28);
+		expect(attrs.skills).toContain({});
 		expect(attrs.defense).toBe(10);
 		expect(attrs.healingRate).toBe(7);
 	});
