@@ -4,8 +4,7 @@ const warriorNovicePath = new Novice(
 	// Level 1
 	new AttributeModifier({
 		health: 5,
-		languages: ["Elvish"],
-		professions: ["Blacksmith"],
+		professions: ["Warrior"],
 		skills: [
 			{
 				name: "Catch Your Breath",
@@ -27,11 +26,6 @@ const warriorNovicePath = new Novice(
 				name: "Combat Prowess",
 				description: "Your attacks with weapons deal 1d6 extra damage.",
 			},
-			{
-				name: "Forceful Strike",
-				description:
-					"When the total of your attack roll is 20 or higher and exceeds the target number by at least 5, the attack deals 1d6 extra damage.",
-			},
 		],
 	}),
 	// Level 5
@@ -41,8 +35,7 @@ const warriorNovicePath = new Novice(
 		skills: [
 			{
 				name: "Combat Expertise",
-				description:
-					"When you use an action to attack with a weapon, you either deal 1d6 extra damage with that attack or make another attack against a different target at any point before the end of your turn.",
+				description: "When you use an action to attack with a weapon, you either deal 1d6 extra damage with that attack or make another attack against a different target at any point before the end of your turn.",
 			},
 		],
 	}),
@@ -52,13 +45,11 @@ const warriorNovicePath = new Novice(
 		skills: [
 			{
 				name: "Grit",
-				description:
-					"You can use Catch Your Breath twice between each rest.",
+				description: "You can use Catch Your Breath twice between each rest.",
 			},
 			{
 				name: "Combat Mastery",
-				description:
-					"When you use an action to attack with a weapon, you either deal 1d6 extra damage with that attack or make another attack against a different target at any point before the end of your turn. This talent is cumulative with Combat Expertise. You must choose a different target for each attack you make.",
+				description: "When you use an action to attack with a weapon, you either deal 1d6 extra damage with that attack or make another attack against a different target at any point before the end of your turn. This talent is cumulative with Combat Expertise. You must choose a different target for each attack you make.",
 			},
 		],
 	})

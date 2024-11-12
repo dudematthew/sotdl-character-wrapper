@@ -1,0 +1,24 @@
+MAGIC 
+
+Magic is essentialy:
+- traditions
+- spells
+
+When you get tradition, you get spell lvl 0.
+
+Whether you have access to a spell, or not, your path (or maybe ancestry) defines it.
+For each level of path, you get a choice - sometimes it's more traditions and sometimes more spells.
+Every choice should get a default value and for spells, the default choice should be less spells (less work for DM).
+Spells are different than skills - each spell is a choice so it shouldn't be as easy to calculate dynamicaly as skills.
+A spell choice is also not something that should be changing with paths. Users don't want to see their choices evaporate whenever one change happens.
+Something like spell choice is necessary - something that holds informations about what user decided to do and keep it even if change appear.
+Spell choices should be automatically filled with the most obvious choices of spells. It doesn't matter as it should be changed later.
+
+So we're here with two choices:
+- how many spells has been chosen and which tradition
+- which spells has been chosen based on tradition
+
+Choices could have three types of behaviour:
+- Random
+- First available
+- Weighted
