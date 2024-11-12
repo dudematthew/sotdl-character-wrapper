@@ -4,6 +4,7 @@ import magicianNovicePath from "../instances/paths/novice/magicianNovicePath";
 import { fireTradition } from "../magic/traditions";
 import { Spell, TraditionChoice } from "../magic/types";
 import { ProfessionChoice } from "../choices";
+import { debugResult } from "../utils/testDebug";
 
 describe("Magician Path Choices", () => {
     let character: Character;
@@ -231,38 +232,31 @@ describe("Magician Path Choices", () => {
             }
 
             // Log complete character state
-            console.log('\n=== Level 2 Magician State ===');
-            console.log('\nAttributes:', {
-                health: character.attributes.health,
-                power: character.attributes.power,
-                defense: character.attributes.defense,
-                // Temporarily remove spellSlots until implemented
-            });
-            
-            console.log('\nSkills:', character.attributes.skills.map(s => ({
-                name: s.name,
-                description: s.description
-            })));
-            
-            console.log('\nProfessions:', character.attributes.professions);
-            
-            console.log('\nSpells:', character.getSpells().map(s => ({
-                name: s.name,
-                tradition: s.tradition,
-                level: s.level
-            })));
-            
-            console.log('\nAvailable Level 2 Choices:');
-            const level2Choices = magicianNovicePath.getChoicesForLevel(2);
-            level2Choices.forEach(choice => {
-                console.log(`\n${choice.name}:`, 
-                    choice.options.map(o => ({
+            debugResult({
+                attributes: {
+                    health: character.attributes.health,
+                    power: character.attributes.power,
+                    defense: character.attributes.defense,
+                },
+                skills: character.attributes.skills.map(s => ({
+                    name: s.name,
+                    description: s.description
+                })),
+                professions: character.attributes.professions,
+                spells: character.getSpells().map(s => ({
+                    name: s.name,
+                    tradition: s.tradition,
+                    level: s.level
+                })),
+                availableChoices: magicianNovicePath.getChoicesForLevel(2).map(choice => ({
+                    name: choice.name,
+                    options: choice.options.map(o => ({
                         name: o.name,
                         type: o.type,
                         tradition: o.data.tradition,
                         level: o.data.level
                     }))
-                );
+                }))
             });
         });
     });

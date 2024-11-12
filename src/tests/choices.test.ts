@@ -1,6 +1,7 @@
 import { Character } from "../characters";
 import { ChoiceManager } from "../choices/ChoiceManager";
 import humanAncestry from "../instances/ancestries/HumanAncestry";
+import { debugResult } from "../utils/testDebug";
 
 interface SpellChoice {
     id: string;
@@ -40,6 +41,11 @@ describe("Choice System", () => {
         expect(selected.length).toBe(2);
         expect(selected[0].id).toBe("fireball");
         expect(selected[1].id).toBe("icebolt");
+
+        debugResult({
+            selected,
+            available: spellChoiceManager.getAvailable()
+        });
     });
 
     test("Manual Selection", () => {
@@ -55,6 +61,11 @@ describe("Choice System", () => {
         expect(selected.length).toBe(2);
         expect(selected[0].id).toBe("lightning");
         expect(selected[1].id).toBe("heal");
+
+        debugResult({
+            selected,
+            available: spellChoiceManager.getAvailable()
+        });
     });
 
     test("Weighted Selection", () => {
@@ -86,6 +97,11 @@ describe("Choice System", () => {
 
         // Fireball should be selected more often due to higher weight
         expect(selections['fireball']).toBeGreaterThan(iterations / 3);
+
+        debugResult({
+            selections,
+            available: weightedChoiceManager.getAvailable()
+        });
     });
 
     test("Invalid Selection Count", () => {
@@ -104,5 +120,10 @@ describe("Choice System", () => {
         expect(() => {
             spellChoiceManager.manualSelect([]);
         }).toThrow();
+
+        debugResult({
+            selections: [],
+            available: spellChoiceManager.getAvailable()
+        });
     });
 }); 

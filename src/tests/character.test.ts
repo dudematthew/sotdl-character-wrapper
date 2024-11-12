@@ -1,5 +1,6 @@
 import { Character } from "../characters";
 import edwardCharacterFactory from "../instances/charactersFactories/edwardCharacterFactory";
+import { debugResult } from "../utils/testDebug";
 
 const levelUpBy = (character: Character, levels: number) => {
 	for (let i = 0; i < levels; i++) {
@@ -22,6 +23,18 @@ describe("Character Attributes Calculation", () => {
 		expect(attrs.speed).toBe(10);
 		expect(attrs.languages).toContain("Common");
 		expect(attrs.professions).toContain("Warrior");
+
+		debugResult({
+			level: character.level,
+			attributes: {
+				health: attrs.health,
+				defense: attrs.defense,
+				healingRate: attrs.healingRate,
+				speed: attrs.speed,
+				languages: attrs.languages,
+				professions: attrs.professions
+			}
+		});
 	});
 
 	test("Attributes after leveling up to level 1", () => {
@@ -31,6 +44,18 @@ describe("Character Attributes Calculation", () => {
 		expect(attrs.health).toBe(15);
 		expect(attrs.defense).toBe(10);
 		expect(attrs.healingRate).toBe(3);
+
+		debugResult({
+			level: character.level,
+			attributes: {
+				health: attrs.health,
+				defense: attrs.defense,
+				healingRate: attrs.healingRate,
+				speed: attrs.speed,
+				languages: attrs.languages,
+				professions: attrs.professions
+			}
+		});
 	});
 
 	test("Attributes after leveling up to level 2", () => {
@@ -40,6 +65,18 @@ describe("Character Attributes Calculation", () => {
 		expect(attrs.health).toBe(20);
 		expect(attrs.defense).toBe(10);
 		expect(attrs.healingRate).toBe(5);
+
+		debugResult({
+			level: character.level,
+			attributes: {
+				health: attrs.health,
+				defense: attrs.defense,
+				healingRate: attrs.healingRate,
+				speed: attrs.speed,
+				languages: attrs.languages,
+				professions: attrs.professions
+			}
+		});
 	});
 
 	test("Attributes after leveling up to level 3", () => {
@@ -49,6 +86,18 @@ describe("Character Attributes Calculation", () => {
 		expect(attrs.health).toBe(23);
 		expect(attrs.defense).toBe(10);
 		expect(attrs.healingRate).toBe(5);
+
+		debugResult({
+			level: character.level,
+			attributes: {
+				health: attrs.health,
+				defense: attrs.defense,
+				healingRate: attrs.healingRate,
+				speed: attrs.speed,
+				languages: attrs.languages,
+				professions: attrs.professions
+			}
+		});
 	});
 
 	test("Attributes after leveling up to level 4", () => {
@@ -58,5 +107,17 @@ describe("Character Attributes Calculation", () => {
 		expect(attrs.health).toBe(28);
 		expect(attrs.defense).toBe(10);
 		expect(attrs.healingRate).toBe(7);
+
+		debugResult({
+			level: character.level,
+			attributes: {
+				health: attrs.health,
+				defense: attrs.defense,
+				healingRate: attrs.healingRate,
+				speed: attrs.speed,
+				languages: attrs.languages,
+				professions: attrs.professions
+			}
+		});
 	});
 });
