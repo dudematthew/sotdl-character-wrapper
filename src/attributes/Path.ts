@@ -17,8 +17,10 @@ export abstract class Path {
 		this.levelChoices.set(level, choices);
 	}
 
-	getChoicesForLevel(level: number): ChoiceConfig[] {
-		return this.levelChoices.get(level) || [];
+	public getChoicesForLevel(level: number): ChoiceConfig[] {
+		const modifier = this.getModifier(level);
+		if (!modifier || !modifier.choices) return [];
+		return modifier.choices.map(builder => builder.build());
 	}
 
 	getModifier(level: number): AttributeModifier | null {

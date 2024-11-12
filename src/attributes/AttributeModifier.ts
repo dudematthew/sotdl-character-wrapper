@@ -1,3 +1,4 @@
+import { ConfiguredChoiceBuilder } from "../choices/ConfiguredChoice";
 import { attributes, Skill } from "../types";
 
 export class AttributeModifier {
@@ -18,8 +19,9 @@ export class AttributeModifier {
 	public languages?: string[];
 	public professions?: string[];
 	public skills?: Skill[];
+	public choices?: ConfiguredChoiceBuilder[];
 
-	constructor(modifiers: Partial<attributes>) {
+	constructor(modifiers: Partial<attributes & { choices?: ConfiguredChoiceBuilder[] }>) {
 		Object.assign(this, modifiers);
 	}
 }
