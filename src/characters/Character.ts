@@ -12,6 +12,10 @@ import { Path } from "../attributes/Path";
 import { Spell, TraditionChoice, SpellChoiceManager } from "../magic";
 import { CharacterChoice } from "../choices/types";
 
+interface SpellSlots {
+	[level: number]: number;
+}
+
 export class Character {
 	public name: string;
 	public level: number = 0;
@@ -168,5 +172,20 @@ export class Character {
 				this._attributes.professions = [...this._attributes.professions, item.name];
 			}
 		});
+	}
+
+	getSpellSlots(): SpellSlots {
+		const slots: SpellSlots = {};
+		
+		// Base spell slots for level 2 magician
+		if (this.level >= 1) {
+			slots[0] = 2; // Level 0 spells
+			slots[1] = 2; // Level 1 spells
+		}
+		if (this.level >= 2) {
+			slots[2] = 1; // Level 2 spells
+		}
+		
+		return slots;
 	}
 }

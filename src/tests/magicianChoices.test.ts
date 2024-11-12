@@ -193,5 +193,77 @@ describe("Magician Path Choices", () => {
                 expect(choice.maxSelections).toBe(1);
             });
         });
+
+        test("Shows complete Level 2 Magician state", () => {
+            // Setup Level 1 choices first
+            const level1Choices = magicianNovicePath.getChoicesForLevel(1);
+            
+            // Select Fire tradition
+            const traditionChoice = level1Choices.find(c => c.id === 'level1-magic-choice-1');
+            const fireTraditionOption = traditionChoice?.options.find(o => o.id === fireTradition.id);
+            
+            if (fireTraditionOption && fireTraditionOption.type === 'tradition') {
+                const choice: TraditionChoice = {
+                    id: fireTraditionOption.id,
+                    name: fireTraditionOption.name,
+                    type: 'tradition',
+                    data: {
+                        spellSlots: fireTraditionOption.data.spellSlots || 1,
+                        level0Spells: fireTraditionOption.data.level0Spells || []
+                    }
+                };
+                character.applyChoice(traditionChoice!.id, [choice]);
+            }
+
+            // Select Academic Knowledge
+            const academicChoice = level1Choices.find(c => c.id === 'level1-academic-knowledge');
+            const historyOption = academicChoice?.options[0];
+            if (historyOption) {
+                const professionChoice: ProfessionChoice = {
+                    id: 'history',
+                    name: 'History',
+                    type: 'profession',
+                    data: {
+                        description: historyOption.data.description || ''
+                    }
+                };
+                character.applyChoice(academicChoice!.id, [professionChoice]);
+            }
+
+            // Log complete character state
+            console.log('\n=== Level 2 Magician State ===');
+            console.log('\nAttributes:', {
+                health: character.attributes.health,
+                power: character.attributes.power,
+                defense: character.attributes.defense,
+                // Temporarily remove spellSlots until implemented
+            });
+            
+            console.log('\nSkills:', character.attributes.skills.map(s => ({
+                name: s.name,
+                description: s.description
+            })));
+            
+            console.log('\nProfessions:', character.attributes.professions);
+            
+            console.log('\nSpells:', character.getSpells().map(s => ({
+                name: s.name,
+                tradition: s.tradition,
+                level: s.level
+            })));
+            
+            console.log('\nAvailable Level 2 Choices:');
+            const level2Choices = magicianNovicePath.getChoicesForLevel(2);
+            level2Choices.forEach(choice => {
+                console.log(`\n${choice.name}:`, 
+                    choice.options.map(o => ({
+                        name: o.name,
+                        type: o.type,
+                        tradition: o.data.tradition,
+                        level: o.data.level
+                    }))
+                );
+            });
+        });
     });
 }); 
