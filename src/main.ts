@@ -1,8 +1,14 @@
+/**
+ * Main entry point for the character builder application
+ * Creates a sample character and displays its progression through levels
+ */
 import edwardCharacterFactory from "./instances/charactersFactories/edwardCharacterFactory";
 
+// Create a test character and display its attributes at each level
 const myCharacter = edwardCharacterFactory();
 
 for (let i = 0; i <= 4; i++) {
+	// Display character stats at current level
 	console.log(`Level ${myCharacter.level} =====================`);
 	console.log(`Strength: ${myCharacter.attributes.strength}`);
 	console.log(`Agility: ${myCharacter.attributes.agility}`);

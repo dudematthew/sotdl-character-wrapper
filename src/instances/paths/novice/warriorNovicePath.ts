@@ -1,5 +1,9 @@
 import { AttributeModifier, Novice } from "../../../attributes";
 
+/**
+ * Defines the Warrior novice path
+ * A combat-focused path emphasizing strength and durability
+ */
 const warriorNovicePath = new Novice(
 	// Level 1
 	new AttributeModifier(

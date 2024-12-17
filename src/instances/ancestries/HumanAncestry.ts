@@ -1,10 +1,14 @@
 import { AttributeModifier } from "../../attributes";
 import { Ancestry } from "../../characters";
 
+/**
+ * Defines the Human ancestry
+ * Represents balanced starting attributes with versatile capabilities
+ */
 const humanAncestry = new Ancestry(
-	// main attributes
+	// Base attributes for humans
 	{ strength: 10, agility: 10, intellect: 10, will: 10 },
-	// secondary attributes
+	// Rules for calculating secondary attributes
 	{
 		perception: (mainAttrs) => mainAttrs.intellect,
 		defense: (mainAttrs) => mainAttrs.agility,
@@ -21,14 +25,13 @@ const humanAncestry = new Ancestry(
 		professions: () => ["Warrior"],
 		skills: () => [],
 	},
-	// level 4 modifier
+	// Level 4 ancestry benefits
 	new AttributeModifier({
 		health: 5,
 		skills: [
 			{
 				name: "Determined",
-				description:
-					"When you roll a 1 ons the die from a boon, you can reroll the die and choose to use the new number.",
+				description: "...",
 			},
 		],
 	})

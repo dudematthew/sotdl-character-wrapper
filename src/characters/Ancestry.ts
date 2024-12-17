@@ -2,11 +2,15 @@ import {
 	mainAttributes,
 	secondaryAttributes,
 	attributeCalculationRules,
-	attributes,
+	ChoiceConfig,
 } from "../types";
 import { Character } from "./Character";
 import { AttributeModifier } from "../attributes/AttributeModifier";
 
+/**
+ * Represents a character's ancestry (race/lineage)
+ * Defines base attributes and racial bonuses
+ */
 export class Ancestry {
 	mainAttributes: mainAttributes;
 	secondaryAttributeRules: attributeCalculationRules;
@@ -22,34 +26,64 @@ export class Ancestry {
 		this.ancestryModifier = modifier;
 	}
 
+	/**
+	 * Gets available choices for ancestry
+	 */
+	getChoices(): ChoiceConfig | undefined {
+		if (this.ancestryModifier.attributeChoices) {
+			return {
+				type: "attribute",
+				count: this.ancestryModifier.attributeChoices.count,
+				increaseBy: this.ancestryModifier.attributeChoices.increaseBy,
+				availableAttributes:
+					this.ancestryModifier.attributeChoices.defaultAttributes,
+			};
+		} else if (this.ancestryModifier.skills) {
+			return {
+				type: "skill",
+				count: 1,
+				availableSkills: this.ancestryModifier.skills,
+				selectedSkills: [],
+			};
+		}
+		return undefined;
+	}
+
+	/**
+	 * Applies ancestry-specific modifiers to a character
+	 * Some modifiers only activate at certain levels
+	 */
 	applyModifiers(
 		character: Character,
 		mainAttributes: mainAttributes,
 		secondaryAttributes: secondaryAttributes
 	): void {
-		// this.applyModifier(
-		// 	mainAttributes,
-		// 	secondaryAttributes,
-		// 	this.ancestryModifier
-		// );
-
-		if (character.level >= 4) {
-			this.applyModifier(
-				mainAttributes,
-				secondaryAttributes,
-				this.ancestryModifier
-			);
-		}
+		this.applyModifier(
+			mainAttributes,
+			secondaryAttributes,
+			this.ancestryModifier
+		);
 	}
 
+	/**
+	 * Applies a specific modifier to character attributes
+	 * Handles both numeric and array-based modifications
+	 */
 	private applyModifier(
 		mainAttributes: mainAttributes,
 		secondaryAttributes: secondaryAttributes,
 		modifier: AttributeModifier
 	) {
 		for (const key in modifier) {
-			if (modifier[key as keyof attributes] !== undefined) {
-				const attributeKey = key as keyof attributes;
+			if (
+				modifier[
+					key as keyof mainAttributes | keyof secondaryAttributes
+				] !== undefined &&
+				key !== "attributeChoices"
+			) {
+				const attributeKey = key as
+					| keyof mainAttributes
+					| keyof secondaryAttributes;
 				if (attributeKey in mainAttributes) {
 					(mainAttributes[
 						attributeKey as keyof mainAttributes

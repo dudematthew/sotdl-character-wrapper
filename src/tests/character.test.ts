@@ -59,7 +59,9 @@ describe("Character Attributes Calculation", () => {
 		expect(character.level).toBe(4);
 		const attrs = character.attributes;
 		expect(attrs.health).toBe(28);
-		expect(attrs.skills).toContain({});
+		expect(attrs.skills.some((skill) => skill.name === "Determined")).toBe(
+			true
+		);
 		expect(attrs.defense).toBe(10);
 		expect(attrs.healingRate).toBe(7);
 	});

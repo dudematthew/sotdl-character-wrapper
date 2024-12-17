@@ -1,8 +1,17 @@
 import { Path } from "./Path";
-import { attributes, mainAttributes, secondaryAttributes } from "../types";
+import {
+	attributes,
+	mainAttributes,
+	secondaryAttributes,
+	ChoiceConfig,
+} from "../types";
 import { Character } from "../characters";
 import { AttributeModifier } from "./AttributeModifier";
 
+/**
+ * Represents a Novice path that a character can take
+ * Provides initial benefits at levels 1, 2, 5, and 8
+ */
 export class Novice extends Path {
 	l1Mod: AttributeModifier;
 	l2Mod: AttributeModifier;
@@ -22,6 +31,71 @@ export class Novice extends Path {
 		this.l8Mod = l8Mod;
 	}
 
+	/**
+	 * Gets available choices for the current level
+	 */
+	getChoices(level: number): { level: number; config: ChoiceConfig }[] {
+		const choices: { level: number; config: ChoiceConfig }[] = [];
+
+		if (level >= 1 && this.l1Mod.attributeChoices) {
+			choices.push({
+				level: 1,
+				config: {
+					type: "attribute",
+					count: this.l1Mod.attributeChoices.count,
+					increaseBy: this.l1Mod.attributeChoices.increaseBy,
+					availableAttributes:
+						this.l1Mod.attributeChoices.defaultAttributes,
+				},
+			});
+		}
+
+		if (level >= 2 && this.l2Mod.attributeChoices) {
+			choices.push({
+				level: 2,
+				config: {
+					type: "attribute",
+					count: this.l2Mod.attributeChoices.count,
+					increaseBy: this.l2Mod.attributeChoices.increaseBy,
+					availableAttributes:
+						this.l2Mod.attributeChoices.defaultAttributes,
+				},
+			});
+		}
+
+		if (level >= 5 && this.l5Mod.attributeChoices) {
+			choices.push({
+				level: 5,
+				config: {
+					type: "attribute",
+					count: this.l5Mod.attributeChoices.count,
+					increaseBy: this.l5Mod.attributeChoices.increaseBy,
+					availableAttributes:
+						this.l5Mod.attributeChoices.defaultAttributes,
+				},
+			});
+		}
+
+		if (level >= 8 && this.l8Mod.attributeChoices) {
+			choices.push({
+				level: 8,
+				config: {
+					type: "attribute",
+					count: this.l8Mod.attributeChoices.count,
+					increaseBy: this.l8Mod.attributeChoices.increaseBy,
+					availableAttributes:
+						this.l8Mod.attributeChoices.defaultAttributes,
+				},
+			});
+		}
+
+		return choices;
+	}
+
+	/**
+	 * Applies Novice path modifiers based on character level
+	 * Handles early-game attribute changes and abilities
+	 */
 	applyModifiers(
 		character: Character,
 		mainAttributes: mainAttributes,
@@ -51,8 +125,20 @@ export class Novice extends Path {
 				character
 			);
 		}
+		if (character.level >= 8) {
+			this.applyModifier(
+				mainAttributes,
+				secondaryAttributes,
+				this.l8Mod,
+				character
+			);
+		}
 	}
 
+	/**
+	 * Internal helper to apply a specific level's modifications
+	 * Handles both attribute increases and special abilities
+	 */
 	private applyModifier(
 		mainAttributes: mainAttributes,
 		secondaryAttributes: secondaryAttributes,
@@ -62,7 +148,7 @@ export class Novice extends Path {
 		for (const key in modifier) {
 			if (
 				modifier[key as keyof attributes] !== undefined &&
-				key !== "choices"
+				key !== "attributeChoices"
 			) {
 				const attributeKey = key as keyof attributes;
 				if (attributeKey in mainAttributes) {
@@ -87,14 +173,6 @@ export class Novice extends Path {
 					}
 				}
 			}
-		}
-
-		// Apply attribute choices if present
-		if (modifier.choices) {
-			modifier.applyChoices(
-				mainAttributes,
-				character.getChoicesForLevel(character.level)
-			);
 		}
 	}
 }

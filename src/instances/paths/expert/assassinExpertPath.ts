@@ -1,5 +1,9 @@
 import { AttributeModifier, Expert } from "../../../attributes";
 
+/**
+ * Defines the Assassin expert path
+ * Focuses on stealth and deadly precision
+ */
 const assassinExpertPath = new Expert(
 	// Level 3
 	new AttributeModifier(

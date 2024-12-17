@@ -1,8 +1,17 @@
 import { Path } from "./Path";
-import { attributes, mainAttributes, secondaryAttributes } from "../types";
+import {
+	attributes,
+	mainAttributes,
+	secondaryAttributes,
+	ChoiceConfig,
+} from "../types";
 import { Character } from "../characters";
 import { AttributeModifier } from "./AttributeModifier";
 
+/**
+ * Represents an Expert path that a character can take
+ * Provides benefits at levels 3, 6, and 9
+ */
 export class Expert extends Path {
 	l3Mod: AttributeModifier;
 	l6Mod: AttributeModifier;
@@ -19,6 +28,58 @@ export class Expert extends Path {
 		this.l9Mod = l9Mod;
 	}
 
+	/**
+	 * Gets available choices for the current level
+	 */
+	getChoices(level: number): { level: number; config: ChoiceConfig }[] {
+		const choices: { level: number; config: ChoiceConfig }[] = [];
+
+		if (level >= 3 && this.l3Mod.attributeChoices) {
+			choices.push({
+				level: 3,
+				config: {
+					type: "attribute",
+					count: this.l3Mod.attributeChoices.count,
+					increaseBy: this.l3Mod.attributeChoices.increaseBy,
+					availableAttributes:
+						this.l3Mod.attributeChoices.defaultAttributes,
+				},
+			});
+		}
+
+		if (level >= 6 && this.l6Mod.attributeChoices) {
+			choices.push({
+				level: 6,
+				config: {
+					type: "attribute",
+					count: this.l6Mod.attributeChoices.count,
+					increaseBy: this.l6Mod.attributeChoices.increaseBy,
+					availableAttributes:
+						this.l6Mod.attributeChoices.defaultAttributes,
+				},
+			});
+		}
+
+		if (level >= 9 && this.l9Mod.attributeChoices) {
+			choices.push({
+				level: 9,
+				config: {
+					type: "attribute",
+					count: this.l9Mod.attributeChoices.count,
+					increaseBy: this.l9Mod.attributeChoices.increaseBy,
+					availableAttributes:
+						this.l9Mod.attributeChoices.defaultAttributes,
+				},
+			});
+		}
+
+		return choices;
+	}
+
+	/**
+	 * Applies Expert path modifiers based on character level
+	 * Handles attribute changes and special abilities
+	 */
 	applyModifiers(
 		character: Character,
 		mainAttributes: mainAttributes,
@@ -50,6 +111,10 @@ export class Expert extends Path {
 		}
 	}
 
+	/**
+	 * Internal helper to apply a specific level's modifications
+	 * Handles both attribute increases and special abilities
+	 */
 	private applyModifier(
 		mainAttributes: mainAttributes,
 		secondaryAttributes: secondaryAttributes,
@@ -59,7 +124,7 @@ export class Expert extends Path {
 		for (const key in modifier) {
 			if (
 				modifier[key as keyof attributes] !== undefined &&
-				key !== "choices"
+				key !== "attributeChoices"
 			) {
 				const attributeKey = key as keyof attributes;
 				if (attributeKey in mainAttributes) {
@@ -84,14 +149,6 @@ export class Expert extends Path {
 					}
 				}
 			}
-		}
-
-		// Apply attribute choices if present
-		if (modifier.choices) {
-			modifier.applyChoices(
-				mainAttributes,
-				character.getChoicesForLevel(character.level)
-			);
 		}
 	}
 }

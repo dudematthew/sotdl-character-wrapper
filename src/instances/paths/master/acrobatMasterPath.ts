@@ -1,5 +1,9 @@
 import { AttributeModifier, Master } from "../../../attributes";
 
+/**
+ * Defines the Acrobat master path
+ * A highly mobile path focused on agility and movement
+ */
 const acrobatMasterPath = new Master(
 	new AttributeModifier(
 		{
