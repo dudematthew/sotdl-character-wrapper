@@ -2,35 +2,46 @@ import { AttributeModifier, Master } from "../../../attributes";
 
 /**
  * Defines the Acrobat master path
- * A highly mobile path focused on agility and movement
+ * Focuses on agility and mobility
  */
 const acrobatMasterPath = new Master(
+	// Level 7
 	new AttributeModifier(
 		{
 			health: 3,
-			speed: 2,
-			languages: ["Elvish"],
 			skills: [
 				{
-					name: "Acrobatics",
+					name: "Acrobatic Defense",
 					description:
-						"You can move through spaces occupied by other creatures.\n• You move at full Speed across all forms of difficult terrain, even when climbing or swimming.\n• Provided your Speed is greater than 0, you can stand up without using your move.\n• When you take damage from landing after a fall, you can use a triggered action to make an Agility challenge roll. On a success, you reduce the damage from the fall by the total of your roll. If you reduce the damage to 0, you land on your feet.",
+						"When you use an action to move, you gain +2 to your Defense until the start of your next turn.",
+				},
+				{
+					name: "Tumble",
+					description:
+						"When a creature attacks you and gets a 0 on the attack roll, you can use a triggered action to move up to your Speed.",
 				},
 			],
 		},
 		{
-			count: 3,
+			type: "attribute",
+			count: 2,
 			increaseBy: 1,
-			defaultAttributes: ["agility", "strength", "intellect"],
+			availableAttributes: ["agility", "strength", "intellect"],
 		}
 	),
+	// Level 10
 	new AttributeModifier({
 		health: 3,
 		skills: [
 			{
-				name: "Mobility",
+				name: "Graceful Recovery",
 				description:
-					"When you take a fast turn, you can use an action and move. Your movement, on any turn, never triggers free attacks.",
+					"When you use Catch Your Breath, you can move up to half your Speed without using an action.",
+			},
+			{
+				name: "Improved Acrobatic Defense",
+				description:
+					"When you use an action to move, you gain +3 to your Defense until the start of your next turn.",
 			},
 		],
 	})

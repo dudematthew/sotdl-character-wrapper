@@ -104,13 +104,3 @@ export interface ChoiceLocation {
 	source: "ancestry" | "novicePath" | "expertPath" | "masterPath";
 	level: number;
 }
-
-/**
- * Legacy type for backward compatibility
- * @deprecated Use AttributeChoiceConfig instead
- */
-export type AttributeChoice = {
-	count: number;
-	increaseBy: number;
-	defaultAttributes: (keyof mainAttributes)[];
-};

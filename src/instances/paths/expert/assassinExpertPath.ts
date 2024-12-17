@@ -31,9 +31,10 @@ const assassinExpertPath = new Expert(
 			],
 		},
 		{
+			type: "attribute",
 			count: 2,
 			increaseBy: 1,
-			defaultAttributes: ["agility", "intellect"],
+			availableAttributes: ["agility", "intellect"],
 		}
 	),
 	// Level 6
@@ -43,7 +44,7 @@ const assassinExpertPath = new Expert(
 			{
 				name: "Manufacture Poison",
 				description:
-					"You can use an action and an alchemist’s kit to create a dose of poison. You must spend at least 1 minute concentrating, during which time you use the kit and special ingredients worth 5 cp. At the end of this time, you create one dose of poison (see Chapter 6). The poison retains potency until you complete a rest.",
+					"You can use an action and an alchemist's kit to create a dose of poison. You must spend at least 1 minute concentrating, during which time you use the kit and special ingredients worth 5 cp. At the end of this time, you create one dose of poison (see Chapter 6). The poison retains potency until you complete a rest.",
 			},
 		],
 	}),
@@ -52,7 +53,7 @@ const assassinExpertPath = new Expert(
 		health: 3,
 		skills: [
 			{
-				name: "Killer’s Eye",
+				name: "Killer's Eye",
 				description:
 					"You can use an action on your turn to choose one creature within long range from which you are hidden. Make a Perception challenge roll. On a success, you know where best to attack the target for 1 minute. Until the effect ends, when you attack the target, you make your attack roll with 1 boon and the attack deals 2d6 extra damage.",
 			},

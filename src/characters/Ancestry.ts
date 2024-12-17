@@ -30,23 +30,7 @@ export class Ancestry {
 	 * Gets available choices for ancestry
 	 */
 	getChoices(): ChoiceConfig | undefined {
-		if (this.ancestryModifier.attributeChoices) {
-			return {
-				type: "attribute",
-				count: this.ancestryModifier.attributeChoices.count,
-				increaseBy: this.ancestryModifier.attributeChoices.increaseBy,
-				availableAttributes:
-					this.ancestryModifier.attributeChoices.defaultAttributes,
-			};
-		} else if (this.ancestryModifier.skills) {
-			return {
-				type: "skill",
-				count: 1,
-				availableSkills: this.ancestryModifier.skills,
-				selectedSkills: [],
-			};
-		}
-		return undefined;
+		return this.ancestryModifier.getChoiceConfig();
 	}
 
 	/**
@@ -79,7 +63,7 @@ export class Ancestry {
 				modifier[
 					key as keyof mainAttributes | keyof secondaryAttributes
 				] !== undefined &&
-				key !== "attributeChoices"
+				key !== "choiceConfig"
 			) {
 				const attributeKey = key as
 					| keyof mainAttributes

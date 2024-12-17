@@ -1,4 +1,4 @@
-import { AttributeChoice, attributes, mainAttributes, Skill } from "../types";
+import { ChoiceConfig, attributes, mainAttributes, Skill } from "../types";
 
 /**
  * Represents modifications that can be applied to a character's attributes
@@ -27,41 +27,22 @@ export class AttributeModifier {
 	public languages?: string[];
 	public professions?: string[];
 	public skills?: Skill[];
-	public attributeChoices?: AttributeChoice;
+	public choiceConfig?: ChoiceConfig;
 
 	/**
 	 * Creates a new modifier with the specified attribute changes and optional choices
 	 */
-	constructor(
-		modifiers: Partial<attributes>,
-		attributeChoices?: AttributeChoice
-	) {
+	constructor(modifiers: Partial<attributes>, choiceConfig?: ChoiceConfig) {
 		Object.assign(this, modifiers);
-		if (attributeChoices) {
-			this.attributeChoices = attributeChoices;
+		if (choiceConfig) {
+			this.choiceConfig = choiceConfig;
 		}
 	}
 
 	/**
-	 * Applies attribute choices to a character's main attributes
-	 * Uses either user-specified choices or default choices if none provided
+	 * Gets the choice configuration for this modifier
 	 */
-	applyAttributeChoices(
-		mainAttributes: mainAttributes,
-		userAttributeChoices?: (keyof mainAttributes)[]
-	): void {
-		if (this.attributeChoices) {
-			const selectedAttributes =
-				userAttributeChoices ||
-				this.attributeChoices.defaultAttributes.slice(
-					0,
-					this.attributeChoices.count
-				);
-			for (let i = 0; i < this.attributeChoices.count; i++) {
-				const attribute =
-					selectedAttributes[i % selectedAttributes.length];
-				mainAttributes[attribute] += this.attributeChoices.increaseBy;
-			}
-		}
+	getChoiceConfig(): ChoiceConfig | undefined {
+		return this.choiceConfig;
 	}
 }

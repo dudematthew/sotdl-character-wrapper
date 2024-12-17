@@ -37,56 +37,32 @@ export class Novice extends Path {
 	getChoices(level: number): { level: number; config: ChoiceConfig }[] {
 		const choices: { level: number; config: ChoiceConfig }[] = [];
 
-		if (level >= 1 && this.l1Mod.attributeChoices) {
-			choices.push({
-				level: 1,
-				config: {
-					type: "attribute",
-					count: this.l1Mod.attributeChoices.count,
-					increaseBy: this.l1Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l1Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 1) {
+			const config = this.l1Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 1, config });
+			}
 		}
 
-		if (level >= 2 && this.l2Mod.attributeChoices) {
-			choices.push({
-				level: 2,
-				config: {
-					type: "attribute",
-					count: this.l2Mod.attributeChoices.count,
-					increaseBy: this.l2Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l2Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 2) {
+			const config = this.l2Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 2, config });
+			}
 		}
 
-		if (level >= 5 && this.l5Mod.attributeChoices) {
-			choices.push({
-				level: 5,
-				config: {
-					type: "attribute",
-					count: this.l5Mod.attributeChoices.count,
-					increaseBy: this.l5Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l5Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 5) {
+			const config = this.l5Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 5, config });
+			}
 		}
 
-		if (level >= 8 && this.l8Mod.attributeChoices) {
-			choices.push({
-				level: 8,
-				config: {
-					type: "attribute",
-					count: this.l8Mod.attributeChoices.count,
-					increaseBy: this.l8Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l8Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 8) {
+			const config = this.l8Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 8, config });
+			}
 		}
 
 		return choices;
@@ -148,7 +124,7 @@ export class Novice extends Path {
 		for (const key in modifier) {
 			if (
 				modifier[key as keyof attributes] !== undefined &&
-				key !== "attributeChoices"
+				key !== "choiceConfig"
 			) {
 				const attributeKey = key as keyof attributes;
 				if (attributeKey in mainAttributes) {

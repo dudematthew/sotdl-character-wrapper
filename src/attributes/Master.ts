@@ -31,30 +31,18 @@ export class Master extends Path {
 	getChoices(level: number): { level: number; config: ChoiceConfig }[] {
 		const choices: { level: number; config: ChoiceConfig }[] = [];
 
-		if (level >= 7 && this.l7Mod.attributeChoices) {
-			choices.push({
-				level: 7,
-				config: {
-					type: "attribute",
-					count: this.l7Mod.attributeChoices.count,
-					increaseBy: this.l7Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l7Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 7) {
+			const config = this.l7Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 7, config });
+			}
 		}
 
-		if (level >= 10 && this.l10Mod.attributeChoices) {
-			choices.push({
-				level: 10,
-				config: {
-					type: "attribute",
-					count: this.l10Mod.attributeChoices.count,
-					increaseBy: this.l10Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l10Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 10) {
+			const config = this.l10Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 10, config });
+			}
 		}
 
 		return choices;
@@ -100,7 +88,7 @@ export class Master extends Path {
 		for (const key in modifier) {
 			if (
 				modifier[key as keyof attributes] !== undefined &&
-				key !== "attributeChoices"
+				key !== "choiceConfig"
 			) {
 				const attributeKey = key as keyof attributes;
 				if (attributeKey in mainAttributes) {

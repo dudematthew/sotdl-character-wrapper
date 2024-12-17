@@ -34,43 +34,25 @@ export class Expert extends Path {
 	getChoices(level: number): { level: number; config: ChoiceConfig }[] {
 		const choices: { level: number; config: ChoiceConfig }[] = [];
 
-		if (level >= 3 && this.l3Mod.attributeChoices) {
-			choices.push({
-				level: 3,
-				config: {
-					type: "attribute",
-					count: this.l3Mod.attributeChoices.count,
-					increaseBy: this.l3Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l3Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 3) {
+			const config = this.l3Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 3, config });
+			}
 		}
 
-		if (level >= 6 && this.l6Mod.attributeChoices) {
-			choices.push({
-				level: 6,
-				config: {
-					type: "attribute",
-					count: this.l6Mod.attributeChoices.count,
-					increaseBy: this.l6Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l6Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 6) {
+			const config = this.l6Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 6, config });
+			}
 		}
 
-		if (level >= 9 && this.l9Mod.attributeChoices) {
-			choices.push({
-				level: 9,
-				config: {
-					type: "attribute",
-					count: this.l9Mod.attributeChoices.count,
-					increaseBy: this.l9Mod.attributeChoices.increaseBy,
-					availableAttributes:
-						this.l9Mod.attributeChoices.defaultAttributes,
-				},
-			});
+		if (level >= 9) {
+			const config = this.l9Mod.getChoiceConfig();
+			if (config) {
+				choices.push({ level: 9, config });
+			}
 		}
 
 		return choices;
@@ -124,7 +106,7 @@ export class Expert extends Path {
 		for (const key in modifier) {
 			if (
 				modifier[key as keyof attributes] !== undefined &&
-				key !== "attributeChoices"
+				key !== "choiceConfig"
 			) {
 				const attributeKey = key as keyof attributes;
 				if (attributeKey in mainAttributes) {

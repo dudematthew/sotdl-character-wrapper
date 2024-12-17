@@ -26,15 +26,29 @@ const humanAncestry = new Ancestry(
 		skills: () => [],
 	},
 	// Level 4 ancestry benefits
-	new AttributeModifier({
-		health: 5,
-		skills: [
-			{
-				name: "Determined",
-				description: "...",
-			},
-		],
-	})
+	new AttributeModifier(
+		{
+			health: 5,
+			skills: [
+				{
+					name: "Determined",
+					description:
+						"You gain 1 Fortune point at the start of each session.",
+				},
+			],
+		},
+		{
+			type: "skill",
+			count: 1,
+			availableSkills: [
+				{
+					name: "Determined",
+					description:
+						"You gain 1 Fortune point at the start of each session.",
+				},
+			],
+		}
+	)
 );
 
 export default humanAncestry;
