@@ -13,6 +13,12 @@ import { Expert } from "../attributes/Expert";
 import { Master } from "../attributes/Master";
 import { Path } from "../attributes/Path";
 
+export interface ChoiceValidationConfig {
+	validateOnPathChange: boolean;
+	validateOnAncestryChange: boolean;
+	preserveInvalidChoices: boolean;
+}
+
 /**
  * Represents a playable character in the game
  * Manages character progression, attributes, and paths
@@ -20,15 +26,287 @@ import { Path } from "../attributes/Path";
 export class Character {
 	public name: string;
 	public level: number = 0;
-	public ancestry: Ancestry;
-	public novicePath: Novice | null = null;
-	public expertPath: Expert | null = null;
-	public masterPath: Master | null = null;
+	private _ancestry: Ancestry;
+	private _novicePath: Novice | null = null;
+	private _expertPath: Expert | null = null;
+	private _masterPath: Master | null = null;
 	private choicesByLocation: Map<string, ChoiceConfig> = new Map();
+	private validationConfig: ChoiceValidationConfig = {
+		validateOnPathChange: true,
+		validateOnAncestryChange: true,
+		preserveInvalidChoices: false,
+	};
 
 	constructor(config: characterConfig, ancestry: Ancestry) {
 		this.name = config.name;
-		this.ancestry = ancestry;
+		this._ancestry = ancestry;
+	}
+
+	// Getters and setters for paths and ancestry
+	get ancestry(): Ancestry {
+		return this._ancestry;
+	}
+
+	set ancestry(value: Ancestry) {
+		this._ancestry = value;
+		if (this.validationConfig.validateOnAncestryChange) {
+			this.validateChoicesForSource("ancestry");
+		}
+	}
+
+	get novicePath(): Novice | null {
+		return this._novicePath;
+	}
+
+	set novicePath(value: Novice | null) {
+		this._novicePath = value;
+		if (this.validationConfig.validateOnPathChange) {
+			this.validateChoicesForSource("novicePath");
+		}
+	}
+
+	get expertPath(): Expert | null {
+		return this._expertPath;
+	}
+
+	set expertPath(value: Expert | null) {
+		this._expertPath = value;
+		if (this.validationConfig.validateOnPathChange) {
+			this.validateChoicesForSource("expertPath");
+		}
+	}
+
+	get masterPath(): Master | null {
+		return this._masterPath;
+	}
+
+	set masterPath(value: Master | null) {
+		this._masterPath = value;
+		if (this.validationConfig.validateOnPathChange) {
+			this.validateChoicesForSource("masterPath");
+		}
+	}
+
+	/**
+	 * Configures how choices are validated when paths or ancestry change
+	 */
+	setValidationConfig(config: Partial<ChoiceValidationConfig>) {
+		const oldConfig = this.validationConfig;
+		this.validationConfig = { ...this.validationConfig, ...config };
+
+		// If validation was enabled, validate immediately
+		if (
+			!oldConfig.validateOnPathChange &&
+			this.validationConfig.validateOnPathChange
+		) {
+			this.validateAllChoices();
+		}
+		if (
+			!oldConfig.validateOnAncestryChange &&
+			this.validationConfig.validateOnAncestryChange
+		) {
+			this.validateChoicesForSource("ancestry");
+		}
+	}
+
+	/**
+	 * Validates all choices for all sources
+	 */
+	private validateAllChoices() {
+		this.validateChoicesForSource("ancestry");
+		this.validateChoicesForSource("novicePath");
+		this.validateChoicesForSource("expertPath");
+		this.validateChoicesForSource("masterPath");
+	}
+
+	/**
+	 * Clears choices for a specific source or all choices if no source specified
+	 */
+	clearChoices(
+		source?: "ancestry" | "novicePath" | "expertPath" | "masterPath"
+	) {
+		if (source) {
+			Array.from(this.choicesByLocation.keys())
+				.filter((key) => key.startsWith(source))
+				.forEach((key) => this.choicesByLocation.delete(key));
+		} else {
+			this.choicesByLocation.clear();
+		}
+	}
+
+	/**
+	 * Gets invalid choices that would be removed by validation
+	 * Useful for showing warnings to the user before making changes
+	 */
+	getInvalidChoices(
+		source: "ancestry" | "novicePath" | "expertPath" | "masterPath"
+	): ChoiceConfig[] {
+		const invalidChoices: ChoiceConfig[] = [];
+		const choicesToValidate = Array.from(this.choicesByLocation.entries())
+			.filter(([key]) => key.startsWith(source))
+			.map(([key, value]) => ({ key, value }));
+
+		for (const { key, value } of choicesToValidate) {
+			let availableChoices = this.getAvailableChoices();
+			let currentChoice = availableChoices.find(
+				(c) =>
+					`${c.location.source}-${c.location.level}` === key &&
+					c.config.type === value.type
+			);
+
+			if (
+				!currentChoice ||
+				!this.isChoiceValid(value, currentChoice.config)
+			) {
+				invalidChoices.push(value);
+			}
+		}
+
+		return invalidChoices;
+	}
+
+	/**
+	 * Checks if a choice is valid against current configuration
+	 */
+	private isChoiceValid(
+		choice: ChoiceConfig,
+		currentConfig: ChoiceConfig
+	): boolean {
+		if (choice.type !== currentConfig.type) return false;
+
+		switch (choice.type) {
+			case "attribute":
+				if (currentConfig.type !== "attribute") return false;
+				return (
+					choice.selectedAttributes?.every((attr) =>
+						currentConfig.availableAttributes.includes(attr)
+					) ?? false
+				);
+
+			case "skill":
+				if (currentConfig.type !== "skill") return false;
+				return (
+					choice.selectedSkills?.every((skill) =>
+						currentConfig.availableSkills.some(
+							(vs) => vs.name === skill.name
+						)
+					) ?? false
+				);
+
+			case "profession":
+				if (currentConfig.type !== "profession") return false;
+				return (
+					choice.selectedProfessions?.every((prof) =>
+						currentConfig.availableProfessions.includes(prof)
+					) ?? false
+				);
+
+			default:
+				return false;
+		}
+	}
+
+	/**
+	 * Validates choices for a specific source (ancestry or path)
+	 * Removes invalid choices and updates partially valid ones
+	 */
+	private validateChoicesForSource(
+		source: "ancestry" | "novicePath" | "expertPath" | "masterPath"
+	) {
+		if (this.validationConfig.preserveInvalidChoices) {
+			return;
+		}
+
+		// Get all choices for this source
+		const choicesToValidate = Array.from(this.choicesByLocation.entries())
+			.filter(([key]) => key.startsWith(source))
+			.map(([key, value]) => ({ key, value }));
+
+		for (const { key, value } of choicesToValidate) {
+			let availableChoices = this.getAvailableChoices();
+			let currentChoice = availableChoices.find(
+				(c) =>
+					`${c.location.source}-${c.location.level}` === key &&
+					c.config.type === value.type
+			);
+
+			if (!currentChoice) {
+				// Choice is no longer available, remove it
+				this.choicesByLocation.delete(key);
+				continue;
+			}
+
+			// Validate selected options based on choice type
+			if (
+				value.type === "attribute" &&
+				currentChoice.config.type === "attribute"
+			) {
+				const validAttributes =
+					currentChoice.config.availableAttributes;
+				const selectedAttributes = value.selectedAttributes?.filter(
+					(attr) => validAttributes.includes(attr)
+				);
+
+				if (selectedAttributes && selectedAttributes.length > 0) {
+					// Update choice with only valid attributes
+					this.choicesByLocation.set(key, {
+						...value,
+						selectedAttributes: selectedAttributes.slice(
+							0,
+							currentChoice.config.count
+						),
+					});
+				} else {
+					// No valid attributes remain, remove the choice
+					this.choicesByLocation.delete(key);
+				}
+			} else if (
+				value.type === "skill" &&
+				currentChoice.config.type === "skill"
+			) {
+				const validSkills = currentChoice.config.availableSkills;
+				const selectedSkills = value.selectedSkills?.filter((skill) =>
+					validSkills.some((vs) => vs.name === skill.name)
+				);
+
+				if (selectedSkills && selectedSkills.length > 0) {
+					// Update choice with only valid skills
+					this.choicesByLocation.set(key, {
+						...value,
+						selectedSkills: selectedSkills.slice(
+							0,
+							currentChoice.config.count
+						),
+					});
+				} else {
+					// No valid skills remain, remove the choice
+					this.choicesByLocation.delete(key);
+				}
+			} else if (
+				value.type === "profession" &&
+				currentChoice.config.type === "profession"
+			) {
+				const validProfessions =
+					currentChoice.config.availableProfessions;
+				const selectedProfessions = value.selectedProfessions?.filter(
+					(prof) => validProfessions.includes(prof)
+				);
+
+				if (selectedProfessions && selectedProfessions.length > 0) {
+					// Update choice with only valid professions
+					this.choicesByLocation.set(key, {
+						...value,
+						selectedProfessions: selectedProfessions.slice(
+							0,
+							currentChoice.config.count
+						),
+					});
+				} else {
+					// No valid professions remain, remove the choice
+					this.choicesByLocation.delete(key);
+				}
+			}
+		}
 	}
 
 	/**
@@ -255,19 +533,6 @@ export class Character {
 		);
 
 		return secondaryAttrs;
-	}
-
-	/**
-	 * Assigns a path (Novice, Expert, or Master) to the character
-	 */
-	setPath(path: Path) {
-		if (path instanceof Novice) {
-			this.novicePath = path;
-		} else if (path instanceof Expert) {
-			this.expertPath = path;
-		} else if (path instanceof Master) {
-			this.masterPath = path;
-		}
 	}
 
 	/**

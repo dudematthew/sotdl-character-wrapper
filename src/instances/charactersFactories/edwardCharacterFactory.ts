@@ -10,9 +10,9 @@ import warriorNovicePath from "../paths/novice/warriorNovicePath";
  */
 const edwardCharacterFactory: () => Character = () => {
 	const edwardCharacter = new Character({ name: "Edward" }, humanAncestry);
-	edwardCharacter.setPath(warriorNovicePath);
-	edwardCharacter.setPath(assassinExpertPath);
-	edwardCharacter.setPath(acrobatMasterPath);
+	edwardCharacter.novicePath = warriorNovicePath;
+	edwardCharacter.expertPath = assassinExpertPath;
+	edwardCharacter.masterPath = acrobatMasterPath;
 	return edwardCharacter;
 };
 
