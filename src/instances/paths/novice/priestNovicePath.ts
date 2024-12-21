@@ -39,7 +39,6 @@ const priestNovicePath = new Novice(
 				defaultProfessions: ["Religious Knowledge"],
 			},
 			{
-				// Language choice: either read existing or learn new
 				type: "language",
 				count: 1,
 				canReadExisting: true,

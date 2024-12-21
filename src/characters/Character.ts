@@ -6,6 +6,8 @@ import {
 	ChoiceConfig,
 	ChoiceLocation,
 	AttributeChoiceConfig,
+	LanguageSuggestion,
+	LanguageChoiceConfig,
 } from "../types";
 import { Ancestry } from "./Ancestry";
 import { Novice } from "../attributes/Novice";
@@ -191,6 +193,16 @@ export class Character {
 				) {
 					invalidChoices.push(value);
 				}
+			} else if (
+				value.type === "language" &&
+				currentChoice.config.type === "language"
+			) {
+				if (
+					value.selectedLanguages &&
+					value.selectedLanguages.length > currentChoice.config.count
+				) {
+					invalidChoices.push(value);
+				}
 			}
 		}
 
@@ -228,6 +240,15 @@ export class Character {
 					choice.selectedProfessions?.every((prof) =>
 						currentConfig.availableProfessions.includes(prof)
 					) ?? false
+				);
+
+			case "language":
+				if (currentConfig.type !== "language") return false;
+				// For languages, we only validate that the count is correct
+				// The actual language validation happens at choice creation
+				return (
+					(choice.selectedLanguages?.length ?? 0) <=
+					currentConfig.count
 				);
 
 			default:
@@ -327,6 +348,25 @@ export class Character {
 					});
 				} else {
 					// No valid professions remain, remove the choice
+					this.choicesByLocation.delete(key);
+				}
+			} else if (
+				value.type === "language" &&
+				currentChoice.config.type === "language"
+			) {
+				const selectedLanguages = value.selectedLanguages;
+
+				if (selectedLanguages && selectedLanguages.length > 0) {
+					// Update choice with only valid languages
+					this.choicesByLocation.set(key, {
+						...value,
+						selectedLanguages: selectedLanguages.slice(
+							0,
+							currentChoice.config.count
+						),
+					});
+				} else {
+					// No valid languages remain, remove the choice
 					this.choicesByLocation.delete(key);
 				}
 			}
@@ -457,6 +497,17 @@ export class Character {
 			}
 		} else {
 			// If no choice exists yet, create a new one
+			// For language choices, ensure selected languages don't overlap with existing ones
+			if (selection.type === "language" && selection.selectedLanguages) {
+				const currentLanguages = this.attributes.languages;
+				const validLanguages = selection.selectedLanguages.filter(
+					(lang) => !currentLanguages.includes(lang)
+				);
+				selection = {
+					...selection,
+					selectedLanguages: validLanguages,
+				};
+			}
 			this.choicesByLocation.set(key, selection as ChoiceConfig);
 		}
 	}
@@ -555,6 +606,34 @@ export class Character {
 	}
 
 	/**
+	 * Gets the effective languages for a choice (selected or default)
+	 */
+	private getEffectiveLanguageChoice(location: ChoiceLocation): string[] {
+		const availableChoices = this.getAvailableChoices();
+		const currentChoice = availableChoices.find(
+			(c) =>
+				c.location.source === location.source &&
+				c.location.level === location.level &&
+				c.config.type === "language"
+		);
+
+		if (!currentChoice || currentChoice.config.type !== "language") {
+			return [];
+		}
+
+		const savedChoice = this.getChoice(location);
+		if (savedChoice?.type === "language" && savedChoice.selectedLanguages) {
+			return savedChoice.selectedLanguages.slice(
+				0,
+				currentChoice.config.count
+			);
+		}
+
+		// If no selection is made, return empty array
+		return [];
+	}
+
+	/**
 	 * Calculates and returns the character's current attributes
 	 * Includes base attributes plus all applicable modifiers
 	 */
@@ -610,6 +689,11 @@ export class Character {
 					choice.location
 				);
 				secondaryAttributes.professions.push(...effectiveProfessions);
+			} else if (choice.config.type === "language") {
+				const effectiveLanguages = this.getEffectiveLanguageChoice(
+					choice.location
+				);
+				secondaryAttributes.languages.push(...effectiveLanguages);
 			}
 		});
 
@@ -752,4 +836,106 @@ export class Character {
 	/**
 	 * Gets available choices for the character
 	 */
+
+	/**
+	 * Gets suggested languages based on the character's current state
+	 * Returns a list of suggested languages that don't overlap with currently chosen languages
+	 */
+	getSuggestedLanguages(): LanguageSuggestion[] {
+		// Get currently chosen languages (excluding base languages)
+		const chosenLanguages = Array.from(this.choicesByLocation.values())
+			.filter(
+				(choice): choice is LanguageChoiceConfig =>
+					choice.type === "language"
+			)
+			.flatMap((choice) => choice.selectedLanguages || []);
+
+		// Common suggestions based on character state
+		let commonSuggestions: LanguageSuggestion[] = [
+			{ language: "Common", reason: "Basic communication language" },
+			{
+				language: "High Archaic",
+				reason: "Language of ancient texts and magic",
+			},
+		];
+
+		// Add suggestions based on intellect
+		if (this.attributes.intellect >= 12) {
+			commonSuggestions = commonSuggestions.concat([
+				{
+					language: "Celestial",
+					reason: "Advanced language suitable for high intellect",
+				},
+				{
+					language: "High Archaic",
+					reason: "Complex language suitable for high intellect",
+				},
+			]);
+		}
+
+		// Add suggestions based on path
+		if (this.novicePath) {
+			// Get all skills from the path's modifiers
+			const pathSkills = [
+				...(this.novicePath.l1Mod.skills || []),
+				...(this.novicePath.l2Mod?.skills || []),
+				...(this.novicePath.l5Mod?.skills || []),
+				...(this.novicePath.l8Mod?.skills || []),
+			];
+
+			const hasMagicSkills = pathSkills.some((skill) =>
+				["Sense Magic", "Cantrip", "Academic Knowledge"].includes(
+					skill.name
+				)
+			);
+			const hasPriestSkills = pathSkills.some((skill) =>
+				["Shared Recovery", "Prayer"].includes(skill.name)
+			);
+
+			if (hasMagicSkills) {
+				commonSuggestions = commonSuggestions.concat([
+					{
+						language: "High Archaic",
+						reason: "Essential for magical studies and spellcasting",
+					},
+					{
+						language: "Celestial",
+						reason: "Useful for understanding magical texts",
+					},
+					{
+						language: "Primordial",
+						reason: "Important for elemental magic",
+					},
+				]);
+			}
+
+			if (hasPriestSkills) {
+				commonSuggestions = commonSuggestions.concat([
+					{
+						language: "Celestial",
+						reason: "Sacred language of the gods",
+					},
+					{
+						language: "High Archaic",
+						reason: "Language of religious texts and prayers",
+					},
+				]);
+			}
+		}
+
+		// Filter out languages the character has explicitly chosen
+		const filteredSuggestions = commonSuggestions.filter(
+			(suggestion) => !chosenLanguages.includes(suggestion.language)
+		);
+
+		// Remove duplicates while preserving the first occurrence of each language
+		const seen = new Set<string>();
+		return filteredSuggestions.filter((suggestion) => {
+			if (seen.has(suggestion.language)) {
+				return false;
+			}
+			seen.add(suggestion.language);
+			return true;
+		});
+	}
 }

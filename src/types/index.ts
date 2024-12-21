@@ -94,6 +94,25 @@ export type ProfessionChoiceConfig = {
 };
 
 /**
+ * Configuration for language choices
+ */
+export type LanguageChoiceConfig = {
+	type: "language";
+	count: number;
+	selectedLanguages?: string[];
+	canReadExisting: boolean;
+	canLearnNew: boolean;
+};
+
+/**
+ * Language suggestion system
+ */
+export interface LanguageSuggestion {
+	language: string;
+	reason: string;
+}
+
+/**
  * Union type of all possible choice configurations
  */
 export type ChoiceConfig =
@@ -101,7 +120,7 @@ export type ChoiceConfig =
 	| SkillChoiceConfig
 	| ProfessionChoiceConfig
 	| SpellChoice
-	| LanguageChoice;
+	| LanguageChoiceConfig;
 
 /**
  * Represents where a choice comes from in the character build

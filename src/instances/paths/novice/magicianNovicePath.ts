@@ -1,5 +1,18 @@
 import { AttributeModifier, Novice } from "../../../attributes";
 
+export type MagicalTraditions = {
+	[key: string]: string[];
+};
+
+export const MAGICAL_TRADITIONS: MagicalTraditions = {
+	"Arcane Magic": ["air", "earth", "fire", "water"],
+	"Celestial Magic": ["air", "celestial", "fire"],
+	"Chaos Magic": ["curse", "destruction", "madness"],
+	"Forbidden Magic": ["curse", "necromancy", "shadow"],
+	"Rune Magic": ["battle", "earth", "protection"],
+	"Song Magic": ["air", "enchantment", "nature"],
+};
+
 const magicianNovicePath = new Novice(
 	// Level 1
 	new AttributeModifier(
@@ -10,7 +23,7 @@ const magicianNovicePath = new Novice(
 				{
 					name: "Sense Magic",
 					description:
-						"Area: A sphere with a 5-yard radius centered on a point within your space. You know if there are any ongoing magical effects in the area and from what points they originate.",
+						"You can use an action to extend your awareness to detect the presence of magic. Until the end of the round, you see an aura around any creature or object within short range that bears magic. The aura's color indicates the tradition: blue for arcane magic, gold for celestial magic, green for primal magic, purple for rune magic, red for curse magic, white for song magic, and black for shadow magic. You also know if a creature or object within range is a source of magic, such as a demon, celestial, faerie, or enchanted sword.",
 				},
 				{
 					name: "Cantrip",
@@ -34,8 +47,14 @@ const magicianNovicePath = new Novice(
 			{
 				type: "profession",
 				count: 1,
-				availableProfessions: ["Academic Knowledge"],
-				defaultProfessions: ["Academic Knowledge"],
+				availableProfessions: ["Arcana"],
+				defaultProfessions: ["Arcana"],
+			},
+			{
+				type: "language",
+				count: 1,
+				canReadExisting: true,
+				canLearnNew: true,
 			},
 			{
 				type: "spell",
@@ -84,9 +103,7 @@ const magicianNovicePath = new Novice(
 		{
 			type: "spell",
 			count: 1,
-			choices: [
-				{ type: "flexibleChoice" }, // Can either discover a tradition or learn a spell
-			],
+			choices: [{ type: "flexibleChoice" }],
 		}
 	),
 	// Level 8
