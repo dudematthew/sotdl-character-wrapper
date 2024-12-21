@@ -3,6 +3,7 @@ import { AttributeModifier } from "../attributes/AttributeModifier";
 import { Ancestry } from "../characters/Ancestry";
 import { Novice } from "../attributes/Novice";
 import edwardCharacterFactory from "../instances/charactersFactories/edwardCharacterFactory";
+import magicianCharacterFactory from "../instances/charactersFactories/magicianCharacterFactory";
 import {
 	AttributeChoiceConfig,
 	SkillChoiceConfig,
@@ -11,9 +12,11 @@ import {
 
 describe("Character Choice System", () => {
 	let character: Character;
+	let magicianCharacter: Character;
 
 	beforeEach(() => {
 		character = edwardCharacterFactory();
+		magicianCharacter = magicianCharacterFactory();
 	});
 
 	test("Initial character has no choices at level 0", () => {
@@ -645,5 +648,22 @@ describe("Character Choice System", () => {
 		expect(attrs.strength).toBe(11); // Base 10 + 1
 		expect(attrs.agility).toBe(10); // Base 10, no increase
 		expect(attrs.intellect).toBe(10); // Base 10, no increase
+	});
+
+	test("Default professions are applied when no selection is made", () => {
+		magicianCharacter.levelUp();
+		const choices = magicianCharacter.getAvailableChoices();
+		const professionChoice = choices.find(
+			(c) => c.location.level === 1 && c.config.type === "profession"
+		);
+
+		expect(professionChoice).toBeDefined();
+		if (professionChoice && professionChoice.config.type === "profession") {
+			// Don't set any choice, let defaults apply
+			const attrs = magicianCharacter.attributes;
+			expect(attrs.professions).toContain(
+				professionChoice.config.defaultProfessions?.[0]
+			);
+		}
 	});
 });

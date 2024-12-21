@@ -22,7 +22,7 @@ const humanAncestry = new Ancestry(
 		insanity: () => 0,
 		corruption: () => 0,
 		languages: () => ["Common"],
-		professions: () => ["Warrior"],
+		professions: () => [],
 		skills: () => [],
 	},
 	// Level 4 ancestry benefits

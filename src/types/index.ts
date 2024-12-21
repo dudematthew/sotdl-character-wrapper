@@ -90,6 +90,7 @@ export type ProfessionChoiceConfig = {
 	count: number;
 	availableProfessions: string[];
 	selectedProfessions?: string[];
+	defaultProfessions?: string[];
 };
 
 /**

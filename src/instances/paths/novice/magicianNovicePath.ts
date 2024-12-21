@@ -35,6 +35,7 @@ const magicianNovicePath = new Novice(
 				type: "profession",
 				count: 1,
 				availableProfessions: ["Academic Knowledge"],
+				defaultProfessions: ["Academic Knowledge"],
 			},
 			{
 				type: "spell",

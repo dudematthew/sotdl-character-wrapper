@@ -517,6 +517,44 @@ export class Character {
 	}
 
 	/**
+	 * Gets the effective professions for a choice (selected or default)
+	 */
+	private getEffectiveProfessionChoice(location: ChoiceLocation): string[] {
+		const availableChoices = this.getAvailableChoices();
+		const currentChoice = availableChoices.find(
+			(c) =>
+				c.location.source === location.source &&
+				c.location.level === location.level &&
+				c.config.type === "profession"
+		);
+
+		if (!currentChoice || currentChoice.config.type !== "profession") {
+			return [];
+		}
+
+		const savedChoice = this.getChoice(location);
+		if (
+			savedChoice?.type === "profession" &&
+			savedChoice.selectedProfessions
+		) {
+			return savedChoice.selectedProfessions.slice(
+				0,
+				currentChoice.config.count
+			);
+		}
+
+		// Use default professions if available, limited by count
+		if (currentChoice.config.defaultProfessions) {
+			return currentChoice.config.defaultProfessions.slice(
+				0,
+				currentChoice.config.count
+			);
+		}
+
+		return [];
+	}
+
+	/**
 	 * Calculates and returns the character's current attributes
 	 * Includes base attributes plus all applicable modifiers
 	 */
@@ -567,6 +605,11 @@ export class Character {
 				for (const attr of effectiveAttributes) {
 					mainAttributes[attr] += choice.config.increaseBy;
 				}
+			} else if (choice.config.type === "profession") {
+				const effectiveProfessions = this.getEffectiveProfessionChoice(
+					choice.location
+				);
+				secondaryAttributes.professions.push(...effectiveProfessions);
 			}
 		});
 

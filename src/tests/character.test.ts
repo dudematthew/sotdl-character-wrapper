@@ -54,7 +54,7 @@ describe("Character Attributes Calculation", () => {
 		expect(attrs.healingRate).toBe(2);
 		expect(attrs.speed).toBe(10);
 		expect(attrs.languages).toContain("Common");
-		expect(attrs.professions).toContain("Warrior");
+		expect(attrs.professions).toEqual([]);
 	});
 
 	test("Attributes after leveling up to level 1", () => {
