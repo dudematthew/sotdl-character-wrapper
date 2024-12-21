@@ -492,12 +492,18 @@ export class Character {
 			savedChoice?.type === "attribute" &&
 			savedChoice.selectedAttributes
 		) {
-			return savedChoice.selectedAttributes;
+			return savedChoice.selectedAttributes.slice(
+				0,
+				currentChoice.config.count
+			);
 		}
 
-		// Use default attributes if available
+		// Use default attributes if available, limited by count
 		if (currentChoice.config.defaultAttributes) {
-			return currentChoice.config.defaultAttributes;
+			return currentChoice.config.defaultAttributes.slice(
+				0,
+				currentChoice.config.count
+			);
 		}
 
 		// If no defaults are provided, use all attributes up to count

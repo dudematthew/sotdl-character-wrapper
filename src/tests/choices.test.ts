@@ -619,4 +619,31 @@ describe("Character Choice System", () => {
 			}
 		});
 	});
+
+	test("Default attributes are limited by count", () => {
+		// Create a path with more default attributes than count
+		const newPath = new Novice(
+			new AttributeModifier(
+				{},
+				{
+					type: "attribute",
+					count: 1, // Only one attribute allowed
+					increaseBy: 1,
+					defaultAttributes: ["strength", "agility", "intellect"], // Three defaults
+				}
+			),
+			new AttributeModifier({}, undefined),
+			new AttributeModifier({}, undefined),
+			new AttributeModifier({}, undefined)
+		);
+
+		character.novicePath = newPath;
+		character.levelUp();
+
+		const attrs = character.attributes;
+		// Only the first default attribute should be applied
+		expect(attrs.strength).toBe(11); // Base 10 + 1
+		expect(attrs.agility).toBe(10); // Base 10, no increase
+		expect(attrs.intellect).toBe(10); // Base 10, no increase
+	});
 });
