@@ -69,6 +69,7 @@ export type AttributeChoiceConfig = {
 	increaseBy: number;
 	availableAttributes?: (keyof mainAttributes)[];
 	selectedAttributes?: (keyof mainAttributes)[];
+	defaultAttributes?: (keyof mainAttributes)[];
 };
 
 /**

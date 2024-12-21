@@ -26,7 +26,7 @@ const acrobatMasterPath = new Master(
 			type: "attribute",
 			count: 2,
 			increaseBy: 1,
-			availableAttributes: ["agility", "strength", "intellect"],
+			defaultAttributes: ["agility", "strength", "intellect"],
 		}
 	),
 	// Level 10

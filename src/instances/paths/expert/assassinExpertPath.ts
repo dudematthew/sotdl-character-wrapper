@@ -34,7 +34,7 @@ const assassinExpertPath = new Expert(
 			type: "attribute",
 			count: 2,
 			increaseBy: 1,
-			availableAttributes: ["agility", "intellect"],
+			defaultAttributes: ["agility", "intellect"],
 		}
 	),
 	// Level 6

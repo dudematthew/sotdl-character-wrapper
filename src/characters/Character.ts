@@ -154,11 +154,43 @@ export class Character {
 					c.config.type === value.type
 			);
 
-			if (
-				!currentChoice ||
-				!this.isChoiceValid(value, currentChoice.config)
-			) {
+			if (!currentChoice) {
 				invalidChoices.push(value);
+				continue;
+			}
+
+			// Check count validation
+			if (
+				value.type === "attribute" &&
+				currentChoice.config.type === "attribute"
+			) {
+				if (
+					value.selectedAttributes &&
+					value.selectedAttributes.length > currentChoice.config.count
+				) {
+					invalidChoices.push(value);
+				}
+			} else if (
+				value.type === "skill" &&
+				currentChoice.config.type === "skill"
+			) {
+				if (
+					value.selectedSkills &&
+					value.selectedSkills.length > currentChoice.config.count
+				) {
+					invalidChoices.push(value);
+				}
+			} else if (
+				value.type === "profession" &&
+				currentChoice.config.type === "profession"
+			) {
+				if (
+					value.selectedProfessions &&
+					value.selectedProfessions.length >
+						currentChoice.config.count
+				) {
+					invalidChoices.push(value);
+				}
 			}
 		}
 
@@ -177,11 +209,8 @@ export class Character {
 		switch (choice.type) {
 			case "attribute":
 				if (currentConfig.type !== "attribute") return false;
-				return (
-					choice.selectedAttributes?.every((attr) =>
-						currentConfig.availableAttributes.includes(attr)
-					) ?? false
-				);
+				// All attributes are valid now
+				return true;
 
 			case "skill":
 				if (currentConfig.type !== "skill") return false;
@@ -241,14 +270,9 @@ export class Character {
 				value.type === "attribute" &&
 				currentChoice.config.type === "attribute"
 			) {
-				const validAttributes =
-					currentChoice.config.availableAttributes;
-				const selectedAttributes = value.selectedAttributes?.filter(
-					(attr) => validAttributes.includes(attr)
-				);
-
+				const selectedAttributes = value.selectedAttributes;
 				if (selectedAttributes && selectedAttributes.length > 0) {
-					// Update choice with only valid attributes
+					// Update choice with valid number of attributes
 					this.choicesByLocation.set(key, {
 						...value,
 						selectedAttributes: selectedAttributes.slice(
@@ -447,6 +471,46 @@ export class Character {
 	}
 
 	/**
+	 * Gets the effective attributes for a choice (selected or default)
+	 */
+	private getEffectiveAttributeChoice(
+		location: ChoiceLocation
+	): (keyof mainAttributes)[] {
+		const availableChoices = this.getAvailableChoices();
+		const currentChoice = availableChoices.find(
+			(c) =>
+				c.location.source === location.source &&
+				c.location.level === location.level
+		);
+
+		if (!currentChoice || currentChoice.config.type !== "attribute") {
+			return [];
+		}
+
+		const savedChoice = this.getChoice(location);
+		if (
+			savedChoice?.type === "attribute" &&
+			savedChoice.selectedAttributes
+		) {
+			return savedChoice.selectedAttributes;
+		}
+
+		// Use default attributes if available
+		if (currentChoice.config.defaultAttributes) {
+			return currentChoice.config.defaultAttributes;
+		}
+
+		// If no defaults are provided, use all attributes up to count
+		const allAttributes: (keyof mainAttributes)[] = [
+			"strength",
+			"agility",
+			"intellect",
+			"will",
+		];
+		return allAttributes.slice(0, currentChoice.config.count);
+	}
+
+	/**
 	 * Calculates and returns the character's current attributes
 	 * Includes base attributes plus all applicable modifiers
 	 */
@@ -488,10 +552,14 @@ export class Character {
 		}
 
 		// Apply choices
-		Array.from(this.choicesByLocation.values()).forEach((choice) => {
-			if (choice.type === "attribute" && choice.selectedAttributes) {
-				for (const attr of choice.selectedAttributes) {
-					mainAttributes[attr] += choice.increaseBy;
+		const availableChoices = this.getAvailableChoices();
+		availableChoices.forEach((choice) => {
+			if (choice.config.type === "attribute") {
+				const effectiveAttributes = this.getEffectiveAttributeChoice(
+					choice.location
+				);
+				for (const attr of effectiveAttributes) {
+					mainAttributes[attr] += choice.config.increaseBy;
 				}
 			}
 		});

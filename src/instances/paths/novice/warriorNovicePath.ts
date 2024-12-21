@@ -28,7 +28,7 @@ const warriorNovicePath = new Novice(
 			type: "attribute",
 			count: 2,
 			increaseBy: 1,
-			availableAttributes: ["strength", "agility"],
+			defaultAttributes: ["strength", "agility"],
 		}
 	),
 	// Level 2

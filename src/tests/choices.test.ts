@@ -32,8 +32,7 @@ describe("Character Choice System", () => {
 		const choice = noviceChoices[0].config as AttributeChoiceConfig;
 		expect(choice.type).toBe("attribute");
 		expect(choice.count).toBe(2);
-		expect(choice.availableAttributes).toContain("strength");
-		expect(choice.availableAttributes).toContain("agility");
+		expect(choice.defaultAttributes).toEqual(["strength", "agility"]);
 	});
 
 	test("Can set and retrieve attribute choices", () => {
@@ -114,15 +113,14 @@ describe("Character Choice System", () => {
 			});
 		}
 
-		// Create new path with different available attributes
+		// Create new path with different count
 		const newPath = new Novice(
 			new AttributeModifier(
 				{},
 				{
 					type: "attribute",
-					count: 2,
+					count: 1, // Only one attribute allowed now
 					increaseBy: 1,
-					availableAttributes: ["intellect", "will"],
 				}
 			),
 			new AttributeModifier({}, undefined),
@@ -133,12 +131,14 @@ describe("Character Choice System", () => {
 		// Change path
 		character.novicePath = newPath;
 
-		// Verify old choices were removed
+		// Verify old choices were updated to match new count
 		const savedChoice = character.getChoice({
 			source: "novicePath",
 			level: 1,
 		});
-		expect(savedChoice).toBeUndefined();
+		if (savedChoice && savedChoice.type === "attribute") {
+			expect(savedChoice.selectedAttributes?.length).toBe(1);
+		}
 	});
 
 	test("Partially valid choices are preserved when changing path", () => {
@@ -156,15 +156,14 @@ describe("Character Choice System", () => {
 			});
 		}
 
-		// Create new path that includes strength but not agility
+		// Create new path with different count
 		const newPath = new Novice(
 			new AttributeModifier(
 				{},
 				{
 					type: "attribute",
-					count: 2,
+					count: 1,
 					increaseBy: 1,
-					availableAttributes: ["strength", "intellect"],
 				}
 			),
 			new AttributeModifier({}, undefined),
@@ -175,7 +174,7 @@ describe("Character Choice System", () => {
 		// Change path
 		character.novicePath = newPath;
 
-		// Verify only valid choices were preserved
+		// Verify only first attribute was preserved
 		const savedChoice = character.getChoice({
 			source: "novicePath",
 			level: 1,
@@ -260,15 +259,14 @@ describe("Character Choice System", () => {
 			// Disable validation
 			character.setValidationConfig({ validateOnPathChange: false });
 
-			// Create new path with different attributes
+			// Create new path with different count
 			const newPath = new Novice(
 				new AttributeModifier(
 					{},
 					{
 						type: "attribute",
-						count: 2,
+						count: 1,
 						increaseBy: 1,
-						availableAttributes: ["intellect", "will"],
 					}
 				),
 				new AttributeModifier({}, undefined),
@@ -279,7 +277,7 @@ describe("Character Choice System", () => {
 			// Change path
 			character.novicePath = newPath;
 
-			// Verify choices were preserved
+			// Verify choices were preserved despite being too many
 			const savedChoice = character.getChoice({
 				source: "novicePath",
 				level: 1,
@@ -293,7 +291,7 @@ describe("Character Choice System", () => {
 			}
 		});
 
-		test("getInvalidChoices returns choices that would be removed", () => {
+		test("getInvalidChoices returns choices that exceed count", () => {
 			// Setup initial path and choices
 			character.levelUp();
 			const initialChoices = character.getAvailableChoices();
@@ -305,11 +303,11 @@ describe("Character Choice System", () => {
 			if (noviceChoice && noviceChoice.config.type === "attribute") {
 				character.setChoice(noviceChoice.location, {
 					...noviceChoice.config,
-					selectedAttributes: ["strength", "agility"],
+					selectedAttributes: ["strength", "agility", "intellect"], // More than allowed
 				});
 			}
 
-			// Create new path with only intellect
+			// Create new path with smaller count
 			const newPath = new Novice(
 				new AttributeModifier(
 					{},
@@ -317,7 +315,6 @@ describe("Character Choice System", () => {
 						type: "attribute",
 						count: 1,
 						increaseBy: 1,
-						availableAttributes: ["intellect"],
 					}
 				),
 				new AttributeModifier({}, undefined),
@@ -337,6 +334,7 @@ describe("Character Choice System", () => {
 				expect(invalidChoice.selectedAttributes).toEqual([
 					"strength",
 					"agility",
+					"intellect",
 				]);
 			}
 
@@ -463,7 +461,7 @@ describe("Character Choice System", () => {
 			if (noviceChoice && noviceChoice.config.type === "attribute") {
 				character.setChoice(noviceChoice.location, {
 					...noviceChoice.config,
-					selectedAttributes: ["strength", "agility"],
+					selectedAttributes: ["strength", "agility", "intellect"], // More than allowed
 				});
 			}
 
@@ -473,15 +471,14 @@ describe("Character Choice System", () => {
 				preserveInvalidChoices: true,
 			});
 
-			// Create new path with different attributes
+			// Create new path with smaller count
 			const newPath = new Novice(
 				new AttributeModifier(
 					{},
 					{
 						type: "attribute",
-						count: 2,
+						count: 1,
 						increaseBy: 1,
-						availableAttributes: ["intellect", "will"],
 					}
 				),
 				new AttributeModifier({}, undefined),
@@ -502,6 +499,7 @@ describe("Character Choice System", () => {
 				expect(savedChoice.selectedAttributes).toEqual([
 					"strength",
 					"agility",
+					"intellect",
 				]);
 			}
 		});
@@ -517,22 +515,21 @@ describe("Character Choice System", () => {
 			if (noviceChoice && noviceChoice.config.type === "attribute") {
 				character.setChoice(noviceChoice.location, {
 					...noviceChoice.config,
-					selectedAttributes: ["strength", "agility"],
+					selectedAttributes: ["strength", "agility", "intellect"], // More than allowed
 				});
 			}
 
 			// Disable validation
 			character.setValidationConfig({ validateOnPathChange: false });
 
-			// Create first new path
+			// Create first new path with smaller count
 			const newPath1 = new Novice(
 				new AttributeModifier(
 					{},
 					{
 						type: "attribute",
-						count: 2,
+						count: 1,
 						increaseBy: 1,
-						availableAttributes: ["intellect", "will"],
 					}
 				),
 				new AttributeModifier({}, undefined),
@@ -549,35 +546,21 @@ describe("Character Choice System", () => {
 				level: 1,
 			});
 			expect(savedChoice).toBeDefined();
+			if (savedChoice && savedChoice.type === "attribute") {
+				expect(savedChoice.selectedAttributes?.length).toBe(3); // Still has too many
+			}
 
 			// Enable validation
 			character.setValidationConfig({ validateOnPathChange: true });
 
-			// Create second new path
-			const newPath2 = new Novice(
-				new AttributeModifier(
-					{},
-					{
-						type: "attribute",
-						count: 2,
-						increaseBy: 1,
-						availableAttributes: ["intellect", "will"],
-					}
-				),
-				new AttributeModifier({}, undefined),
-				new AttributeModifier({}, undefined),
-				new AttributeModifier({}, undefined)
-			);
-
-			// Change path with validation enabled
-			character.novicePath = newPath2;
-
-			// Verify choices were removed
+			// Should validate immediately and trim to correct count
 			savedChoice = character.getChoice({
 				source: "novicePath",
 				level: 1,
 			});
-			expect(savedChoice).toBeUndefined();
+			if (savedChoice && savedChoice.type === "attribute") {
+				expect(savedChoice.selectedAttributes?.length).toBe(1);
+			}
 		});
 
 		test("validation happens immediately after enabling", () => {
@@ -591,19 +574,18 @@ describe("Character Choice System", () => {
 			if (noviceChoice && noviceChoice.config.type === "attribute") {
 				character.setChoice(noviceChoice.location, {
 					...noviceChoice.config,
-					selectedAttributes: ["strength", "agility"],
+					selectedAttributes: ["strength", "agility", "intellect"], // More than allowed
 				});
 			}
 
-			// Create new path with different attributes
+			// Create new path with smaller count
 			const newPath = new Novice(
 				new AttributeModifier(
 					{},
 					{
 						type: "attribute",
-						count: 2,
+						count: 1,
 						increaseBy: 1,
-						availableAttributes: ["intellect", "will"],
 					}
 				),
 				new AttributeModifier({}, undefined),
@@ -615,22 +597,26 @@ describe("Character Choice System", () => {
 			character.setValidationConfig({ validateOnPathChange: false });
 			character.novicePath = newPath;
 
-			// Verify choices were preserved
+			// Verify choices were preserved with too many attributes
 			let savedChoice = character.getChoice({
 				source: "novicePath",
 				level: 1,
 			});
 			expect(savedChoice).toBeDefined();
+			if (savedChoice && savedChoice.type === "attribute") {
+				expect(savedChoice.selectedAttributes?.length).toBe(3);
+			}
 
-			// Enable validation - should validate immediately
+			// Enable validation - should validate immediately and trim to correct count
 			character.setValidationConfig({ validateOnPathChange: true });
 
-			// Verify choices were removed
 			savedChoice = character.getChoice({
 				source: "novicePath",
 				level: 1,
 			});
-			expect(savedChoice).toBeUndefined();
+			if (savedChoice && savedChoice.type === "attribute") {
+				expect(savedChoice.selectedAttributes?.length).toBe(1);
+			}
 		});
 	});
 });

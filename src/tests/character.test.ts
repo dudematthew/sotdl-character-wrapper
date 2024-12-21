@@ -14,6 +14,38 @@ describe("Character Attributes Calculation", () => {
 		character = edwardCharacterFactory();
 	});
 
+	test("Default attribute choices are applied when no selection is made", () => {
+		character.levelUp(); // Level up to 1 where warrior gets attribute choices
+		const attrs = character.attributes;
+
+		// Warrior path has default choices of strength and agility
+		expect(attrs.strength).toBe(11); // Base 10 + 1 from default choice
+		expect(attrs.agility).toBe(11); // Base 10 + 1 from default choice
+		expect(attrs.intellect).toBe(10); // Base 10, no increase
+		expect(attrs.will).toBe(10); // Base 10, no increase
+	});
+
+	test("Selected attributes override default choices", () => {
+		character.levelUp();
+		const choices = character.getAvailableChoices();
+		const attributeChoice = choices.find(
+			(c) => c.location.level === 1 && c.config.type === "attribute"
+		);
+
+		expect(attributeChoice).toBeDefined();
+		if (attributeChoice && attributeChoice.config.type === "attribute") {
+			// Override defaults with different choices
+			character.setChoice(attributeChoice.location, {
+				...attributeChoice.config,
+				selectedAttributes: ["strength", "strength"],
+			});
+
+			const attrs = character.attributes;
+			expect(attrs.strength).toBe(12); // Base 10 + 2 from selected choices
+			expect(attrs.agility).toBe(10); // Base 10, no increase (default was overridden)
+		}
+	});
+
 	// TODO: Add increment of attributes for ancestry
 	test("Initial level attributes", () => {
 		const attrs = character.attributes;

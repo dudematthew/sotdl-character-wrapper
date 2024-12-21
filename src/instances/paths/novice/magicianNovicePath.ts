@@ -29,6 +29,7 @@ const magicianNovicePath = new Novice(
 				type: "attribute",
 				count: 2,
 				increaseBy: 1,
+				defaultAttributes: ["intellect", "will"],
 			},
 			{
 				type: "profession",

@@ -30,12 +30,7 @@ const priestNovicePath = new Novice(
 				type: "attribute",
 				count: 2,
 				increaseBy: 1,
-				availableAttributes: [
-					"strength",
-					"agility",
-					"intellect",
-					"will",
-				],
+				defaultAttributes: ["intellect", "will"],
 			},
 			{
 				type: "profession",
