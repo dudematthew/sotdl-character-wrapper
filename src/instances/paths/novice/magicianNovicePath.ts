@@ -39,7 +39,12 @@ const magicianNovicePath = new Novice(
 			{
 				type: "spell",
 				count: 4,
-				maxPowerLevel: 0,
+				choices: [
+					{ type: "discoverTradition" }, // First choice must be discovering a tradition
+					{ type: "flexibleChoice" }, // Three flexible choices
+					{ type: "flexibleChoice" },
+					{ type: "flexibleChoice" },
+				],
 				specificSpells: ["senseMagic"],
 			},
 		]
@@ -59,7 +64,7 @@ const magicianNovicePath = new Novice(
 		{
 			type: "spell",
 			count: 2,
-			maxPowerLevel: 0,
+			choices: [{ type: "learnSpell" }, { type: "learnSpell" }],
 		}
 	),
 	// Level 5
@@ -78,7 +83,9 @@ const magicianNovicePath = new Novice(
 		{
 			type: "spell",
 			count: 1,
-			maxPowerLevel: 1,
+			choices: [
+				{ type: "flexibleChoice" }, // Can either discover a tradition or learn a spell
+			],
 		}
 	),
 	// Level 8
@@ -96,7 +103,7 @@ const magicianNovicePath = new Novice(
 		{
 			type: "spell",
 			count: 1,
-			maxPowerLevel: 2,
+			choices: [{ type: "learnSpell" }],
 		}
 	)
 );

@@ -64,15 +64,26 @@ export type SpellChoiceOption =
 			traditionId: string;
 	  };
 
+export type SpellChoiceType =
+	| {
+			type: "discoverTradition";
+			restrictToTraditions?: string[];
+	  }
+	| {
+			type: "learnSpell";
+			restrictToTraditions?: string[];
+	  }
+	| {
+			type: "flexibleChoice";
+			restrictToTraditions?: string[];
+	  };
+
 export interface SpellChoice {
 	type: "spell";
 	count: number;
-	maxPowerLevel?: number;
-	availableTraditions?: string[];
-	restrictToTraditions?: string[];
+	choices: SpellChoiceType[];
 	specificSpells?: string[];
 	selectedChoices?: SpellChoiceOption[];
-	learnOnly?: boolean;
 }
 
 export interface SpellcastingAbility {

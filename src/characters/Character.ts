@@ -685,4 +685,28 @@ export class Character {
 		}
 		return [];
 	}
+
+	/**
+	 * Calculates the maximum spell power level available at a given character level
+	 * This is based on the character's Power attribute at that level
+	 */
+	private getMaxSpellPowerForLevel(level: number): number {
+		// Store current level
+		const currentLevel = this.level;
+
+		// Temporarily set level to calculate power
+		this.level = level;
+
+		// Get power at this level
+		const powerAtLevel = this.attributes.power;
+
+		// Restore original level
+		this.level = currentLevel;
+
+		return powerAtLevel;
+	}
+
+	/**
+	 * Gets available choices for the character
+	 */
 }

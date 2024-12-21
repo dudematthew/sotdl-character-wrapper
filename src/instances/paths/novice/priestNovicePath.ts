@@ -48,15 +48,14 @@ const priestNovicePath = new Novice(
 				// Initial tradition discovery (mandatory)
 				type: "spell",
 				count: 1,
-				maxPowerLevel: 0,
+				choices: [{ type: "discoverTradition" }],
 				// restrictToTraditions will be set based on chosen religion
 			},
 			{
 				// Two additional choices
 				type: "spell",
 				count: 2,
-				maxPowerLevel: 0,
-				// restrictToTraditions will be set based on chosen religion
+				choices: [{ type: "learnSpell" }, { type: "learnSpell" }],
 			},
 		]
 	),
@@ -75,7 +74,7 @@ const priestNovicePath = new Novice(
 		{
 			type: "spell",
 			count: 2,
-			maxPowerLevel: 0,
+			choices: [{ type: "learnSpell" }, { type: "learnSpell" }],
 			// restrictToTraditions will be set based on chosen religion
 		}
 	),
@@ -95,8 +94,7 @@ const priestNovicePath = new Novice(
 		{
 			type: "spell",
 			count: 1,
-			maxPowerLevel: 1,
-			learnOnly: true, // Can only learn spells, not discover traditions
+			choices: [{ type: "learnSpell" }],
 		}
 	),
 	// Level 8
@@ -118,8 +116,7 @@ const priestNovicePath = new Novice(
 		{
 			type: "spell",
 			count: 1,
-			maxPowerLevel: 2,
-			learnOnly: true, // Can only learn spells, not discover traditions
+			choices: [{ type: "learnSpell" }],
 		}
 	)
 );
