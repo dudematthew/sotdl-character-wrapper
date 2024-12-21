@@ -31,8 +31,13 @@ export class Expert extends Path {
 	/**
 	 * Gets available choices for the current level
 	 */
-	getChoices(level: number): { level: number; config: ChoiceConfig }[] {
-		const choices: { level: number; config: ChoiceConfig }[] = [];
+	getChoices(
+		level: number
+	): { level: number; config: ChoiceConfig | ChoiceConfig[] }[] {
+		const choices: {
+			level: number;
+			config: ChoiceConfig | ChoiceConfig[];
+		}[] = [];
 
 		if (level >= 3) {
 			const config = this.l3Mod.getChoiceConfig();

@@ -323,51 +323,96 @@ export class Character {
 		if (this.ancestry && this.level >= 4) {
 			const ancestryChoices = this.ancestry.getChoices();
 			if (ancestryChoices) {
-				choices.push({
-					location: { source: "ancestry", level: 4 },
-					config: ancestryChoices,
-				});
+				if (Array.isArray(ancestryChoices)) {
+					ancestryChoices.forEach((choice) => {
+						choices.push({
+							location: { source: "ancestry", level: 4 },
+							config: choice,
+						});
+					});
+				} else {
+					choices.push({
+						location: { source: "ancestry", level: 4 },
+						config: ancestryChoices,
+					});
+				}
 			}
 		}
 
 		// Get path choices
 		if (this.novicePath) {
 			const noviceChoices = this.novicePath.getChoices(this.level);
-			choices.push(
-				...noviceChoices.map((choice) => ({
-					location: {
-						source: "novicePath" as const,
-						level: choice.level,
-					},
-					config: choice.config,
-				}))
-			);
+			noviceChoices.forEach((choice) => {
+				if (Array.isArray(choice.config)) {
+					choice.config.forEach((config) => {
+						choices.push({
+							location: {
+								source: "novicePath",
+								level: choice.level,
+							},
+							config,
+						});
+					});
+				} else {
+					choices.push({
+						location: {
+							source: "novicePath",
+							level: choice.level,
+						},
+						config: choice.config,
+					});
+				}
+			});
 		}
 
 		if (this.expertPath) {
 			const expertChoices = this.expertPath.getChoices(this.level);
-			choices.push(
-				...expertChoices.map((choice) => ({
-					location: {
-						source: "expertPath" as const,
-						level: choice.level,
-					},
-					config: choice.config,
-				}))
-			);
+			expertChoices.forEach((choice) => {
+				if (Array.isArray(choice.config)) {
+					choice.config.forEach((config) => {
+						choices.push({
+							location: {
+								source: "expertPath",
+								level: choice.level,
+							},
+							config,
+						});
+					});
+				} else {
+					choices.push({
+						location: {
+							source: "expertPath",
+							level: choice.level,
+						},
+						config: choice.config,
+					});
+				}
+			});
 		}
 
 		if (this.masterPath) {
 			const masterChoices = this.masterPath.getChoices(this.level);
-			choices.push(
-				...masterChoices.map((choice) => ({
-					location: {
-						source: "masterPath" as const,
-						level: choice.level,
-					},
-					config: choice.config,
-				}))
-			);
+			masterChoices.forEach((choice) => {
+				if (Array.isArray(choice.config)) {
+					choice.config.forEach((config) => {
+						choices.push({
+							location: {
+								source: "masterPath",
+								level: choice.level,
+							},
+							config,
+						});
+					});
+				} else {
+					choices.push({
+						location: {
+							source: "masterPath",
+							level: choice.level,
+						},
+						config: choice.config,
+					});
+				}
+			});
 		}
 
 		return choices;

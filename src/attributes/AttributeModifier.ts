@@ -27,22 +27,25 @@ export class AttributeModifier {
 	public languages?: string[];
 	public professions?: string[];
 	public skills?: Skill[];
-	public choiceConfig?: ChoiceConfig;
+	private choiceConfigs?: ChoiceConfig | ChoiceConfig[];
 
 	/**
 	 * Creates a new modifier with the specified attribute changes and optional choices
 	 */
-	constructor(modifiers: Partial<attributes>, choiceConfig?: ChoiceConfig) {
+	constructor(
+		modifiers: Partial<attributes>,
+		choiceConfigs?: ChoiceConfig | ChoiceConfig[]
+	) {
 		Object.assign(this, modifiers);
-		if (choiceConfig) {
-			this.choiceConfig = choiceConfig;
+		if (choiceConfigs) {
+			this.choiceConfigs = choiceConfigs;
 		}
 	}
 
 	/**
 	 * Gets the choice configuration for this modifier
 	 */
-	getChoiceConfig(): ChoiceConfig | undefined {
-		return this.choiceConfig;
+	getChoiceConfig(): ChoiceConfig | ChoiceConfig[] | undefined {
+		return this.choiceConfigs;
 	}
 }

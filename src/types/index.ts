@@ -1,3 +1,5 @@
+import { SpellChoice, LanguageChoice } from "./spell";
+
 /**
  * Basic character configuration options
  */
@@ -65,7 +67,7 @@ export type AttributeChoiceConfig = {
 	type: "attribute";
 	count: number;
 	increaseBy: number;
-	availableAttributes: (keyof mainAttributes)[];
+	availableAttributes?: (keyof mainAttributes)[];
 	selectedAttributes?: (keyof mainAttributes)[];
 };
 
@@ -95,7 +97,9 @@ export type ProfessionChoiceConfig = {
 export type ChoiceConfig =
 	| AttributeChoiceConfig
 	| SkillChoiceConfig
-	| ProfessionChoiceConfig;
+	| ProfessionChoiceConfig
+	| SpellChoice
+	| LanguageChoice;
 
 /**
  * Represents where a choice comes from in the character build

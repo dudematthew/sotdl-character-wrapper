@@ -29,7 +29,7 @@ export class Ancestry {
 	/**
 	 * Gets available choices for ancestry
 	 */
-	getChoices(): ChoiceConfig | undefined {
+	getChoices(): ChoiceConfig | ChoiceConfig[] | undefined {
 		return this.ancestryModifier.getChoiceConfig();
 	}
 

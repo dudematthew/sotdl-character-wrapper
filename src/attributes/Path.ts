@@ -17,5 +17,5 @@ export abstract class Path {
 	 */
 	abstract getChoices(
 		level: number
-	): { level: number; config: ChoiceConfig }[];
+	): { level: number; config: ChoiceConfig | ChoiceConfig[] }[];
 }
