@@ -1,15 +1,5 @@
 import { AttributeModifier, Novice } from "../../../attributes";
-
-export type ReligiousTraditions = {
-	[key: string]: string[];
-};
-
-export const RELIGIOUS_TRADITIONS: ReligiousTraditions = {
-	"Cult of the New God": ["celestial", "life", "theurgy"],
-	"Dwarfen Ancestors": ["battle", "earth", "life"],
-	"Old Faith": ["life", "nature", "primal"],
-	Witchcraft: ["curse", "enchantment", "life"],
-};
+import { SpellChoice } from "../../../types/spell";
 
 const priestNovicePath = new Novice(
 	// Level 1
@@ -45,18 +35,33 @@ const priestNovicePath = new Novice(
 				canLearnNew: true,
 			},
 			{
-				// Initial tradition discovery (mandatory)
 				type: "spell",
 				count: 1,
-				choices: [{ type: "discoverTradition" }],
-				// restrictToTraditions will be set based on chosen religion
-			},
+				choices: [
+					{
+						type: "discoverTradition",
+						description:
+							"Choose your religious tradition. Common choices include celestial for the New God, earth for Dwarven Ancestors, nature for the Old Faith, or others that match your faith.",
+						defaultChoice: "celestial",
+					},
+				],
+			} as SpellChoice,
 			{
-				// Two additional choices
 				type: "spell",
 				count: 2,
-				choices: [{ type: "learnSpell" }, { type: "learnSpell" }],
-			},
+				choices: [
+					{
+						type: "learnSpell",
+						description:
+							"Choose spells that reflect your chosen faith's teachings.",
+					},
+					{
+						type: "learnSpell",
+						description:
+							"Choose spells that reflect your chosen faith's teachings.",
+					},
+				],
+			} as SpellChoice,
 		]
 	),
 	// Level 2

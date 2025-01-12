@@ -1,17 +1,5 @@
 import { AttributeModifier, Novice } from "../../../attributes";
-
-export type MagicalTraditions = {
-	[key: string]: string[];
-};
-
-export const MAGICAL_TRADITIONS: MagicalTraditions = {
-	"Arcane Magic": ["air", "earth", "fire", "water"],
-	"Celestial Magic": ["air", "celestial", "fire"],
-	"Chaos Magic": ["curse", "destruction", "madness"],
-	"Forbidden Magic": ["curse", "necromancy", "shadow"],
-	"Rune Magic": ["battle", "earth", "protection"],
-	"Song Magic": ["air", "enchantment", "nature"],
-};
+import { SpellChoice } from "../../../types/spell";
 
 const magicianNovicePath = new Novice(
 	// Level 1
@@ -60,13 +48,30 @@ const magicianNovicePath = new Novice(
 				type: "spell",
 				count: 4,
 				choices: [
-					{ type: "discoverTradition" }, // First choice must be discovering a tradition
-					{ type: "flexibleChoice" }, // Three flexible choices
-					{ type: "flexibleChoice" },
-					{ type: "flexibleChoice" },
+					{
+						type: "discoverTradition",
+						description:
+							"Choose your primary magical tradition. Common choices include Arcane Magic (air, earth, fire, water), Celestial Magic (air, celestial, fire), or others that suit your character's background.",
+						defaultChoice: "air",
+					},
+					{
+						type: "flexibleChoice",
+						description:
+							"Choose to either discover a new tradition or learn a spell from a tradition you know. Consider what would best expand your magical capabilities.",
+					},
+					{
+						type: "flexibleChoice",
+						description:
+							"Choose to either discover a new tradition or learn a spell from a tradition you know. Consider what would best expand your magical capabilities.",
+					},
+					{
+						type: "flexibleChoice",
+						description:
+							"Choose to either discover a new tradition or learn a spell from a tradition you know. Consider what would best expand your magical capabilities.",
+					},
 				],
 				specificSpells: ["senseMagic"],
-			},
+			} as SpellChoice,
 		]
 	),
 	// Level 2

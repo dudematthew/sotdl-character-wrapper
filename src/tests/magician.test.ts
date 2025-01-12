@@ -73,6 +73,8 @@ describe("Magician Character", () => {
 			expect(spellChoice.config.choices[0].type).toBe(
 				"discoverTradition"
 			); // First must be tradition discovery
+			expect(spellChoice.config.choices[0].description).toBeTruthy(); // Should have a description
+			expect(spellChoice.config.choices[0].defaultChoice).toBeTruthy(); // Should have a default choice
 			expect(spellChoice.config.choices[1].type).toBe("flexibleChoice"); // Rest are flexible
 			expect(spellChoice.config.choices[2].type).toBe("flexibleChoice");
 			expect(spellChoice.config.choices[3].type).toBe("flexibleChoice");
@@ -531,5 +533,27 @@ describe("Magician Character", () => {
 			["magician"]
 		);
 		expect(filteredTraditions.length).toBe(0);
+	});
+
+	test("Spell choice descriptions are meaningful and helpful", () => {
+		character.levelUp();
+		const choices = character.getAvailableChoices();
+		const spellChoices = choices.filter(
+			(c) => c.location.level === 1 && c.config.type === "spell"
+		);
+
+		const spellChoice = spellChoices[0];
+		if (spellChoice && spellChoice.config.type === "spell") {
+			// Verify tradition discovery description
+			const traditionChoice = spellChoice.config.choices[0];
+			expect(traditionChoice.description).toBeTruthy();
+			expect(traditionChoice.description?.length).toBeGreaterThan(20);
+			expect(traditionChoice.description).toContain("tradition");
+
+			// Verify flexible choice descriptions
+			const flexibleChoice = spellChoice.config.choices[1];
+			expect(flexibleChoice.description).toBeTruthy();
+			expect(flexibleChoice.description?.length).toBeGreaterThan(20);
+		}
 	});
 });

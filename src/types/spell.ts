@@ -64,19 +64,12 @@ export type SpellChoiceOption =
 			traditionId: string;
 	  };
 
-export type SpellChoiceType =
-	| {
-			type: "discoverTradition";
-			restrictToTraditions?: string[];
-	  }
-	| {
-			type: "learnSpell";
-			restrictToTraditions?: string[];
-	  }
-	| {
-			type: "flexibleChoice";
-			restrictToTraditions?: string[];
-	  };
+export interface SpellChoiceType {
+	type: "discoverTradition" | "learnSpell" | "flexibleChoice";
+	restrictToTraditions?: string[];
+	description?: string;
+	defaultChoice?: string;
+}
 
 export interface SpellChoice {
 	type: "spell";
