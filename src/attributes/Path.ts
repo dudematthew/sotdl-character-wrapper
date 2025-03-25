@@ -1,5 +1,5 @@
 import { mainAttributes, secondaryAttributes, ChoiceConfig } from "../types";
-import { Character } from "../characters/Character";
+import { Character } from "../character/Character";
 
 /**
  * Base class for character paths (Novice, Expert, Master)

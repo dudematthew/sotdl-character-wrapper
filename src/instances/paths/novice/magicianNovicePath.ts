@@ -52,7 +52,7 @@ const magicianNovicePath = new Novice(
 						type: "discoverTradition",
 						description:
 							"Choose your primary magical tradition. Common choices include Arcane Magic (air, earth, fire, water), Celestial Magic (air, celestial, fire), or others that suit your character's background.",
-						defaultChoice: "air",
+						defaultChoice: "arcana",
 					},
 					{
 						type: "flexibleChoice",

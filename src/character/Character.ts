@@ -850,30 +850,41 @@ export class Character {
 			)
 			.flatMap((choice) => choice.selectedLanguages || []);
 
-		// Common suggestions based on character state
-		let commonSuggestions: LanguageSuggestion[] = [
-			{ language: "Common", reason: "Basic communication language" },
+		// Ordered array of language preferences
+		const languagePreferences = [
+			{
+				language: "Common",
+				reason: "Basic communication language",
+				canWrite: true,
+			},
 			{
 				language: "High Archaic",
-				reason: "Language of ancient texts and magic",
+				reason: "Language of ancient texts and scholarly works",
+				canWrite: false,
+			},
+			{
+				language: "Celestial",
+				reason: "Sacred language used in religious texts and ceremonies",
+				canWrite: false,
+			},
+			{
+				language: "Elvish",
+				reason: "Language of the elven people and their traditions",
+				canWrite: false,
+			},
+			{
+				language: "Dwarfish",
+				reason: "Language of dwarven culture and craftsmanship",
+				canWrite: false,
+			},
+			{
+				language: "Dark Speech",
+				reason: "Forbidden language of dark magic and ancient curses",
+				canWrite: false,
 			},
 		];
 
-		// Add suggestions based on intellect
-		if (this.attributes.intellect >= 12) {
-			commonSuggestions = commonSuggestions.concat([
-				{
-					language: "Celestial",
-					reason: "Advanced language suitable for high intellect",
-				},
-				{
-					language: "High Archaic",
-					reason: "Complex language suitable for high intellect",
-				},
-			]);
-		}
-
-		// Add suggestions based on path
+		// Add path-specific suggestions
 		if (this.novicePath) {
 			// Get all skills from the path's modifiers
 			const pathSkills = [
@@ -892,50 +903,28 @@ export class Character {
 				["Shared Recovery", "Prayer"].includes(skill.name)
 			);
 
-			if (hasMagicSkills) {
-				commonSuggestions = commonSuggestions.concat([
-					{
-						language: "High Archaic",
-						reason: "Essential for magical studies and spellcasting",
-					},
-					{
-						language: "Celestial",
-						reason: "Useful for understanding magical texts",
-					},
-					{
-						language: "Primordial",
-						reason: "Important for elemental magic",
-					},
-				]);
-			}
-
-			if (hasPriestSkills) {
-				commonSuggestions = commonSuggestions.concat([
-					{
-						language: "Celestial",
-						reason: "Sacred language of the gods",
-					},
-					{
-						language: "High Archaic",
-						reason: "Language of religious texts and prayers",
-					},
-				]);
+			// Adjust writing preferences based on path
+			if (hasMagicSkills || hasPriestSkills) {
+				languagePreferences.forEach((pref) => {
+					if (["High Archaic", "Celestial"].includes(pref.language)) {
+						pref.canWrite = true;
+						if (hasMagicSkills) {
+							pref.reason +=
+								" (You can write this language due to your magical training)";
+						} else {
+							pref.reason +=
+								" (You can write this language due to your religious training)";
+						}
+					}
+				});
 			}
 		}
 
 		// Filter out languages the character has explicitly chosen
-		const filteredSuggestions = commonSuggestions.filter(
+		const filteredSuggestions = languagePreferences.filter(
 			(suggestion) => !chosenLanguages.includes(suggestion.language)
 		);
 
-		// Remove duplicates while preserving the first occurrence of each language
-		const seen = new Set<string>();
-		return filteredSuggestions.filter((suggestion) => {
-			if (seen.has(suggestion.language)) {
-				return false;
-			}
-			seen.add(suggestion.language);
-			return true;
-		});
+		return filteredSuggestions;
 	}
 }

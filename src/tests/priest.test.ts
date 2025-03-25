@@ -1,4 +1,4 @@
-import { Character } from "../characters";
+import { Character } from "../character";
 import peterCharacterFactory from "../instances/charactersFactories/priestCharacterFactory";
 import { SpellRegistry } from "../spells/SpellRegistry";
 

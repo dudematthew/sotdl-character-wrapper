@@ -1,4 +1,4 @@
-import { Character } from "../characters";
+import { Character } from "../character";
 import edwardCharacterFactory from "../instances/charactersFactories/edwardCharacterFactory";
 
 const levelUpBy = (character: Character, levels: number) => {

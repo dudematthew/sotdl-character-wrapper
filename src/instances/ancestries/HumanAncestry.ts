@@ -1,5 +1,5 @@
 import { AttributeModifier } from "../../attributes";
-import { Ancestry } from "../../characters";
+import { Ancestry } from "../../character";
 
 /**
  * Defines the Human ancestry

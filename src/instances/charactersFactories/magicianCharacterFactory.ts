@@ -1,4 +1,4 @@
-import { Character } from "../../characters";
+import { Character } from "../../character";
 import humanAncestry from "../ancestries/HumanAncestry";
 import magicianNovicePath from "../paths/novice/magicianNovicePath";
 import { SpellRegistry } from "../../spells/SpellRegistry";

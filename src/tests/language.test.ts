@@ -1,4 +1,4 @@
-import { Character } from "../characters";
+import { Character } from "../character";
 import magicianCharacterFactory from "../instances/charactersFactories/magicianCharacterFactory";
 import priestCharacterFactory from "../instances/charactersFactories/priestCharacterFactory";
 import { LanguageChoiceConfig, AttributeChoiceConfig } from "../types";

@@ -1,4 +1,4 @@
-import { Character } from "../../characters";
+import { Character } from "../../character";
 import humanAncestry from "../ancestries/HumanAncestry";
 import assassinExpertPath from "../paths/expert/assassinExpertPath";
 import acrobatMasterPath from "../paths/master/acrobatMasterPath";

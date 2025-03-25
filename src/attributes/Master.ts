@@ -5,7 +5,7 @@ import {
 	secondaryAttributes,
 	ChoiceConfig,
 } from "../types";
-import { Character } from "../characters/Character";
+import { Character } from "../character/Character";
 import { AttributeModifier } from "./AttributeModifier";
 
 /**

@@ -1,10 +1,14 @@
 {
-  "name": "sotdl-character-prototype",
-  "version": "1.0.0",
-  "main": "./src/main.ts",
+  "name": "sotdl-character-wrapper",
+  "version": "2.4.0",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
   "scripts": {
     "test": "jest",
-    "start": "ts-node src/main.ts"
+    "start": "ts-node src/main.ts",
+    "preversion": "npm test",
+    "version": "git add -A",
+    "postversion": "git push && git push --tags"
   },
   "author": "",
   "license": "ISC",

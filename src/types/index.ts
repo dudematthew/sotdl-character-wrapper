@@ -102,6 +102,7 @@ export type LanguageChoiceConfig = {
 	selectedLanguages?: string[];
 	canReadExisting: boolean;
 	canLearnNew: boolean;
+	writingPreferences?: { [language: string]: boolean };
 };
 
 /**
@@ -110,6 +111,7 @@ export type LanguageChoiceConfig = {
 export interface LanguageSuggestion {
 	language: string;
 	reason: string;
+	canWrite: boolean;
 }
 
 /**

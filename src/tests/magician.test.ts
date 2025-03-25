@@ -1,4 +1,4 @@
-import { Character } from "../characters";
+import { Character } from "../character";
 import magicianCharacterFactory from "../instances/charactersFactories/magicianCharacterFactory";
 import { SpellRegistry } from "../spells/SpellRegistry";
 import { SpellChoice, SpellChoiceOption } from "../types/spell";
