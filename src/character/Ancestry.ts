@@ -15,21 +15,32 @@ export class Ancestry {
 	mainAttributes: mainAttributes;
 	secondaryAttributeRules: attributeCalculationRules;
 	ancestryModifier: AttributeModifier;
+	initialChoices?: ChoiceConfig | ChoiceConfig[];
 
 	constructor(
 		attributes: mainAttributes,
 		rules: attributeCalculationRules,
-		modifier: AttributeModifier
+		modifier: AttributeModifier,
+		initialChoices?: ChoiceConfig | ChoiceConfig[]
 	) {
 		this.mainAttributes = attributes;
 		this.secondaryAttributeRules = rules;
 		this.ancestryModifier = modifier;
+		this.initialChoices = initialChoices;
 	}
 
 	/**
 	 * Gets available choices for ancestry
+	 * Returns level 0 choices if character level is 0, otherwise returns level 4 choices
 	 */
-	getChoices(): ChoiceConfig | ChoiceConfig[] | undefined {
+	getChoices(level?: number): ChoiceConfig | ChoiceConfig[] | undefined {
+		// If level is explicitly 0, or no level is provided and initialChoices exists,
+		// return the level 0 choices
+		if (level === 0 || (level === undefined && this.initialChoices)) {
+			return this.initialChoices;
+		}
+
+		// Otherwise return the level 4 choices from the ancestry modifier
 		return this.ancestryModifier.getChoiceConfig();
 	}
 
@@ -42,10 +53,31 @@ export class Ancestry {
 		mainAttributes: mainAttributes,
 		secondaryAttributes: secondaryAttributes
 	): void {
-		this.applyModifier(
-			mainAttributes,
-			secondaryAttributes,
-			this.ancestryModifier
+		console.log(
+			`[DEBUG] Ancestry.applyModifiers: Character level = ${character.level}`
+		);
+		console.log(
+			`[DEBUG] Ancestry.applyModifiers: Before modifier: health = ${secondaryAttributes.health}`
+		);
+
+		// Only apply ancestry modifiers if character is at or above level 4
+		if (character.level >= 4) {
+			console.log(
+				`[DEBUG] Ancestry.applyModifiers: Applying level 4+ ancestry modifier`
+			);
+			this.applyModifier(
+				mainAttributes,
+				secondaryAttributes,
+				this.ancestryModifier
+			);
+		} else {
+			console.log(
+				`[DEBUG] Ancestry.applyModifiers: Character below level 4, skipping ancestry modifier`
+			);
+		}
+
+		console.log(
+			`[DEBUG] Ancestry.applyModifiers: After modifier: health = ${secondaryAttributes.health}`
 		);
 	}
 
