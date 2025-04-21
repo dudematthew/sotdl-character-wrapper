@@ -43,13 +43,18 @@ export class ChadCharacterFactory {
 		if (languageChoices.length > 0) {
 			const firstLanguageChoice = languageChoices[0];
 			if (firstLanguageChoice.config.type === "language") {
-				character.setChoice(firstLanguageChoice.location, {
-					type: "language",
-					count: firstLanguageChoice.config.count,
-					canReadExisting: firstLanguageChoice.config.canReadExisting,
-					canLearnNew: firstLanguageChoice.config.canLearnNew,
-					selectedLanguages: ["Elvish"],
-				} as LanguageChoiceConfig);
+				character.setChoice(
+					firstLanguageChoice.location,
+					{
+						type: "language",
+						count: firstLanguageChoice.config.count,
+						canReadExisting:
+							firstLanguageChoice.config.canReadExisting,
+						canLearnNew: firstLanguageChoice.config.canLearnNew,
+						selectedLanguages: ["Elvish"],
+					} as LanguageChoiceConfig,
+					0 // Index 0 for first language choice
+				);
 			}
 		}
 
@@ -57,14 +62,18 @@ export class ChadCharacterFactory {
 		if (languageChoices.length > 1) {
 			const secondLanguageChoice = languageChoices[1];
 			if (secondLanguageChoice.config.type === "language") {
-				character.setChoice(secondLanguageChoice.location, {
-					type: "language",
-					count: secondLanguageChoice.config.count,
-					canReadExisting:
-						secondLanguageChoice.config.canReadExisting,
-					canLearnNew: secondLanguageChoice.config.canLearnNew,
-					selectedLanguages: ["Primordial"],
-				} as LanguageChoiceConfig);
+				character.setChoice(
+					secondLanguageChoice.location,
+					{
+						type: "language",
+						count: secondLanguageChoice.config.count,
+						canReadExisting:
+							secondLanguageChoice.config.canReadExisting,
+						canLearnNew: secondLanguageChoice.config.canLearnNew,
+						selectedLanguages: ["Primordial"],
+					} as LanguageChoiceConfig,
+					1 // Index 1 for second language choice
+				);
 			}
 		}
 
@@ -72,13 +81,17 @@ export class ChadCharacterFactory {
 		if (professionChoices.length > 0) {
 			const firstProfessionChoice = professionChoices[0];
 			if (firstProfessionChoice.config.type === "profession") {
-				character.setChoice(firstProfessionChoice.location, {
-					type: "profession",
-					count: firstProfessionChoice.config.count,
-					availableProfessions:
-						firstProfessionChoice.config.availableProfessions,
-					selectedProfessions: ["Diplomat"],
-				} as ProfessionChoiceConfig);
+				character.setChoice(
+					firstProfessionChoice.location,
+					{
+						type: "profession",
+						count: firstProfessionChoice.config.count,
+						availableProfessions:
+							firstProfessionChoice.config.availableProfessions,
+						selectedProfessions: ["Diplomat"],
+					} as ProfessionChoiceConfig,
+					0 // Index 0 for first profession choice
+				);
 			}
 		}
 
@@ -86,13 +99,17 @@ export class ChadCharacterFactory {
 		if (professionChoices.length > 1) {
 			const secondProfessionChoice = professionChoices[1];
 			if (secondProfessionChoice.config.type === "profession") {
-				character.setChoice(secondProfessionChoice.location, {
-					type: "profession",
-					count: secondProfessionChoice.config.count,
-					availableProfessions:
-						secondProfessionChoice.config.availableProfessions,
-					selectedProfessions: ["Linguist"],
-				} as ProfessionChoiceConfig);
+				character.setChoice(
+					secondProfessionChoice.location,
+					{
+						type: "profession",
+						count: secondProfessionChoice.config.count,
+						availableProfessions:
+							secondProfessionChoice.config.availableProfessions,
+						selectedProfessions: ["Linguist"],
+					} as ProfessionChoiceConfig,
+					1 // Index 1 for second profession choice
+				);
 			}
 		}
 

@@ -30,13 +30,17 @@ if (languageChoices.length > 0) {
 	console.log("\nFirst language choice:", firstChoice);
 
 	if (firstChoice.config.type === "language") {
-		character.setChoice(firstChoice.location, {
-			type: "language",
-			count: firstChoice.config.count,
-			canReadExisting: firstChoice.config.canReadExisting,
-			canLearnNew: firstChoice.config.canLearnNew,
-			selectedLanguages: ["Elvish"],
-		});
+		character.setChoice(
+			firstChoice.location,
+			{
+				type: "language",
+				count: firstChoice.config.count,
+				canReadExisting: firstChoice.config.canReadExisting,
+				canLearnNew: firstChoice.config.canLearnNew,
+				selectedLanguages: ["Elvish"],
+			},
+			0 // Index 0 for first language choice
+		);
 
 		console.log("After setting first language choice:");
 		console.log("Languages:", character.attributes.languages);
@@ -49,16 +53,66 @@ if (languageChoices.length > 1) {
 	console.log("\nSecond language choice:", secondChoice);
 
 	if (secondChoice.config.type === "language") {
-		character.setChoice(secondChoice.location, {
-			type: "language",
-			count: secondChoice.config.count,
-			canReadExisting: secondChoice.config.canReadExisting,
-			canLearnNew: secondChoice.config.canLearnNew,
-			selectedLanguages: ["Primordial"],
-		});
+		character.setChoice(
+			secondChoice.location,
+			{
+				type: "language",
+				count: secondChoice.config.count,
+				canReadExisting: secondChoice.config.canReadExisting,
+				canLearnNew: secondChoice.config.canLearnNew,
+				selectedLanguages: ["Primordial"],
+			},
+			1 // Index 1 for second language choice
+		);
 
 		console.log("After setting second language choice:");
 		console.log("Languages:", character.attributes.languages);
+	}
+}
+
+// Find profession choices
+const professionChoices = choices.filter((c) => c.config.type === "profession");
+console.log("\nProfession choices:", professionChoices.length);
+
+// Set profession choices
+if (professionChoices.length > 0) {
+	const firstChoice = professionChoices[0];
+
+	if (firstChoice.config.type === "profession") {
+		character.setChoice(
+			firstChoice.location,
+			{
+				type: "profession",
+				count: firstChoice.config.count,
+				availableProfessions: firstChoice.config.availableProfessions,
+				selectedProfessions: ["Diplomat"],
+			},
+			0 // Index 0 for first profession choice
+		);
+
+		console.log("After setting first profession choice:");
+		console.log("Professions:", character.attributes.professions);
+	}
+
+	if (professionChoices.length > 1) {
+		const secondChoice = professionChoices[1];
+
+		if (secondChoice.config.type === "profession") {
+			character.setChoice(
+				secondChoice.location,
+				{
+					type: "profession",
+					count: secondChoice.config.count,
+					availableProfessions:
+						secondChoice.config.availableProfessions,
+					selectedProfessions: ["Linguist"],
+				},
+				1 // Index 1 for second profession choice
+			);
+
+			console.log("After setting second profession choice:");
+			console.log("Professions:", character.attributes.professions);
+		}
 	}
 }
 
@@ -73,3 +127,4 @@ console.log(actualChoices);
 
 // Print final attributes
 console.log("\nFinal languages:", character.attributes.languages);
+console.log("Final professions:", character.attributes.professions);

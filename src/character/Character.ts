@@ -485,8 +485,13 @@ export class Character {
 	/**
 	 * Sets a choice for a specific location
 	 */
-	setChoice(location: ChoiceLocation, selection: Partial<ChoiceConfig>) {
-		const key = `${location.source}-${location.level}`;
+	setChoice(
+		location: ChoiceLocation,
+		selection: Partial<ChoiceConfig>,
+		index: number = 0
+	) {
+		// Create a more specific key that includes choice type and index to support multiple choices of same type
+		const key = `${location.source}-${location.level}-${selection.type}-${index}`;
 		const currentChoice = this.choicesByLocation.get(key);
 
 		if (currentChoice) {
@@ -499,25 +504,30 @@ export class Character {
 			// If no choice exists yet, create a new one
 			// For language choices, ensure selected languages don't overlap with existing ones
 			if (selection.type === "language" && selection.selectedLanguages) {
-				const currentLanguages = this.attributes.languages;
-				const validLanguages = selection.selectedLanguages.filter(
-					(lang) => !currentLanguages.includes(lang)
-				);
-				selection = {
-					...selection,
-					selectedLanguages: validLanguages,
-				};
+				// Don't filter out existing languages - we want to allow any language to be chosen
+				this.choicesByLocation.set(key, selection as ChoiceConfig);
+			} else {
+				this.choicesByLocation.set(key, selection as ChoiceConfig);
 			}
-			this.choicesByLocation.set(key, selection as ChoiceConfig);
 		}
 	}
 
 	/**
 	 * Gets the current selection for a specific choice
 	 */
-	getChoice(location: ChoiceLocation): ChoiceConfig | undefined {
-		return this.choicesByLocation.get(
-			`${location.source}-${location.level}`
+	getChoice(
+		location: ChoiceLocation,
+		type: string = "",
+		index: number = 0
+	): ChoiceConfig | undefined {
+		// Support the old format for backward compatibility
+		const oldKey = `${location.source}-${location.level}`;
+		const newKey = `${location.source}-${location.level}-${type}-${index}`;
+
+		// Try the new key format first, fall back to old format
+		return (
+			this.choicesByLocation.get(newKey) ||
+			this.choicesByLocation.get(oldKey)
 		);
 	}
 
@@ -572,37 +582,53 @@ export class Character {
 	 */
 	private getEffectiveProfessionChoice(location: ChoiceLocation): string[] {
 		const availableChoices = this.getAvailableChoices();
-		const currentChoice = availableChoices.find(
+		// Find all profession choices for this location
+		const professionChoices = availableChoices.filter(
 			(c) =>
 				c.location.source === location.source &&
 				c.location.level === location.level &&
 				c.config.type === "profession"
 		);
 
-		if (!currentChoice || currentChoice.config.type !== "profession") {
+		// If no profession choices exist, return empty array
+		if (professionChoices.length === 0) {
 			return [];
 		}
 
-		const savedChoice = this.getChoice(location);
-		if (
-			savedChoice?.type === "profession" &&
-			savedChoice.selectedProfessions
-		) {
-			return savedChoice.selectedProfessions.slice(
-				0,
-				currentChoice.config.count
-			);
+		let selectedProfessions: string[] = [];
+
+		// Collect all selected professions from all profession choices
+		for (let i = 0; i < professionChoices.length; i++) {
+			const currentChoice = professionChoices[i];
+			if (currentChoice.config.type !== "profession") continue;
+
+			const savedChoice = this.getChoice(location, "profession", i);
+
+			if (
+				savedChoice?.type === "profession" &&
+				savedChoice.selectedProfessions
+			) {
+				selectedProfessions = [
+					...selectedProfessions,
+					...savedChoice.selectedProfessions.slice(
+						0,
+						currentChoice.config.count
+					),
+				];
+			} else if (currentChoice.config.defaultProfessions) {
+				// Use default professions if available, limited by count
+				selectedProfessions = [
+					...selectedProfessions,
+					...currentChoice.config.defaultProfessions.slice(
+						0,
+						currentChoice.config.count
+					),
+				];
+			}
 		}
 
-		// Use default professions if available, limited by count
-		if (currentChoice.config.defaultProfessions) {
-			return currentChoice.config.defaultProfessions.slice(
-				0,
-				currentChoice.config.count
-			);
-		}
-
-		return [];
+		// Remove duplicates - fix for TypeScript compatibility
+		return Array.from(new Set(selectedProfessions));
 	}
 
 	/**
@@ -610,27 +636,44 @@ export class Character {
 	 */
 	private getEffectiveLanguageChoice(location: ChoiceLocation): string[] {
 		const availableChoices = this.getAvailableChoices();
-		const currentChoice = availableChoices.find(
+		// Find all language choices for this location
+		const languageChoices = availableChoices.filter(
 			(c) =>
 				c.location.source === location.source &&
 				c.location.level === location.level &&
 				c.config.type === "language"
 		);
 
-		if (!currentChoice || currentChoice.config.type !== "language") {
+		// If no language choices exist, return empty array
+		if (languageChoices.length === 0) {
 			return [];
 		}
 
-		const savedChoice = this.getChoice(location);
-		if (savedChoice?.type === "language" && savedChoice.selectedLanguages) {
-			return savedChoice.selectedLanguages.slice(
-				0,
-				currentChoice.config.count
-			);
+		let selectedLanguages: string[] = [];
+
+		// Collect all selected languages from all language choices
+		for (let i = 0; i < languageChoices.length; i++) {
+			const currentChoice = languageChoices[i];
+			if (currentChoice.config.type !== "language") continue;
+
+			const savedChoice = this.getChoice(location, "language", i);
+
+			if (
+				savedChoice?.type === "language" &&
+				savedChoice.selectedLanguages
+			) {
+				selectedLanguages = [
+					...selectedLanguages,
+					...savedChoice.selectedLanguages.slice(
+						0,
+						currentChoice.config.count
+					),
+				];
+			}
 		}
 
-		// If no selection is made, return empty array
-		return [];
+		// Remove duplicates - fix for TypeScript compatibility
+		return Array.from(new Set(selectedLanguages));
 	}
 
 	/**
@@ -676,6 +719,24 @@ export class Character {
 
 		// Apply choices
 		const availableChoices = this.getAvailableChoices();
+
+		// Keep track of languages and professions we've added to avoid duplicates
+		const uniqueLanguages = new Set<string>();
+		const uniqueProfessions = new Set<string>();
+
+		// Add the default languages and professions to our unique sets
+		secondaryAttributes.languages.forEach((lang) =>
+			uniqueLanguages.add(lang)
+		);
+		secondaryAttributes.professions.forEach((prof) =>
+			uniqueProfessions.add(prof)
+		);
+
+		// Replace the original arrays with empty ones since we'll rebuild them
+		secondaryAttributes.languages = [];
+		secondaryAttributes.professions = [];
+
+		// Process choices by source and level
 		availableChoices.forEach((choice) => {
 			if (choice.config.type === "attribute") {
 				const effectiveAttributes = this.getEffectiveAttributeChoice(
@@ -688,14 +749,43 @@ export class Character {
 				const effectiveProfessions = this.getEffectiveProfessionChoice(
 					choice.location
 				);
-				secondaryAttributes.professions.push(...effectiveProfessions);
+				// Only add professions we haven't added yet
+				effectiveProfessions.forEach((prof) => {
+					if (!uniqueProfessions.has(prof)) {
+						uniqueProfessions.add(prof);
+						secondaryAttributes.professions.push(prof);
+					}
+				});
 			} else if (choice.config.type === "language") {
 				const effectiveLanguages = this.getEffectiveLanguageChoice(
 					choice.location
 				);
-				secondaryAttributes.languages.push(...effectiveLanguages);
+				// Only add languages we haven't added yet
+				effectiveLanguages.forEach((lang) => {
+					if (!uniqueLanguages.has(lang)) {
+						uniqueLanguages.add(lang);
+						secondaryAttributes.languages.push(lang);
+					}
+				});
 			}
 		});
+
+		// Add the default languages and professions back if they weren't added yet
+		this.ancestry.secondaryAttributeRules
+			.languages(mainAttributes, this.level, secondaryAttributes)
+			.forEach((lang) => {
+				if (!secondaryAttributes.languages.includes(lang)) {
+					secondaryAttributes.languages.push(lang);
+				}
+			});
+
+		this.ancestry.secondaryAttributeRules
+			.professions(mainAttributes, this.level, secondaryAttributes)
+			.forEach((prof) => {
+				if (!secondaryAttributes.professions.includes(prof)) {
+					secondaryAttributes.professions.push(prof);
+				}
+			});
 
 		// Recalculate healing rate after all modifiers have been applied
 		secondaryAttributes.healingRate =
