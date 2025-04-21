@@ -113,6 +113,7 @@ export type LanguageChoiceConfig = {
 	type: "language";
 	count: number;
 	selectedLanguages?: string[];
+	availableLanguages?: string[];
 	canReadExisting: boolean;
 	canLearnNew: boolean;
 	writingPreferences?: { [language: string]: boolean };
