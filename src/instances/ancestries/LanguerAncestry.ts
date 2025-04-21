@@ -99,7 +99,26 @@ const languerAncestry = new Ancestry(
 				availableProfessions: [],
 			},
 		]
-	)
+	),
+	// Initial choices (available at character creation)
+	[
+		// Initial attribute choice
+		{
+			type: "attribute",
+			count: 1,
+			increaseBy: 1,
+			availableAttributes: ["intellect", "will"],
+			defaultAttributes: ["intellect"],
+		},
+		// Initial language choice
+		{
+			type: "language",
+			count: 1,
+			canReadExisting: true,
+			canLearnNew: true,
+			availableLanguages: ["Elvish", "Dwarfish", "Goblin", "Primordial"],
+		},
+	]
 );
 
 export default languerAncestry;

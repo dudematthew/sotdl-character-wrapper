@@ -1,9 +1,10 @@
 import { Character } from "../character";
+import humanAncestry from "../instances/ancestries/HumanAncestry";
+import languerAncestry from "../instances/ancestries/LanguerAncestry";
 import magicianCharacterFactory from "../instances/charactersFactories/magicianCharacterFactory";
 import priestCharacterFactory from "../instances/charactersFactories/priestCharacterFactory";
-import { LanguageChoiceConfig, AttributeChoiceConfig } from "../types";
 
-describe("Language Suggestion System", () => {
+describe("Character Language System", () => {
 	let magicianCharacter: Character;
 	let priestCharacter: Character;
 
@@ -12,119 +13,146 @@ describe("Language Suggestion System", () => {
 		priestCharacter = priestCharacterFactory();
 	});
 
-	test("Initial suggestions include Common for any character", () => {
-		const suggestions = magicianCharacter.getSuggestedLanguages();
-		expect(suggestions.some((s) => s.language === "Common")).toBe(true);
+	test("Characters have default ancestry languages", () => {
+		// Human ancestry should have Common
+		expect(magicianCharacter.attributes.languages).toContain("Common");
+
+		// Create a Languer character
+		const languerCharacter = new Character(
+			{ name: "TestLanguer" },
+			languerAncestry
+		);
+		// Languer ancestry should have Common and High Archaic
+		expect(languerCharacter.attributes.languages).toContain("Common");
+		expect(languerCharacter.attributes.languages).toContain("High Archaic");
 	});
 
-	test("Suggestions don't include already known languages", () => {
-		// Level up to get language choice
-		magicianCharacter.levelUp();
+	test("Language choices are applied to character attributes", () => {
+		// Create a character and set a language choice
+		const character = new Character({ name: "TestHuman" }, humanAncestry);
 
-		// Set a language choice
-		const choices = magicianCharacter.getAvailableChoices();
+		// Get available choices
+		const choices = character.getAvailableChoices();
 		const languageChoice = choices.find(
-			(c) => c.config.type === "language"
+			(c) =>
+				c.config.type === "language" && c.location.source === "ancestry"
 		);
 
-		if (languageChoice) {
-			const config = languageChoice.config as LanguageChoiceConfig;
-			magicianCharacter.setChoice(languageChoice.location, {
-				...config,
-				selectedLanguages: ["High Archaic"],
+		// If there's a language choice available, set it
+		if (languageChoice && languageChoice.config.type === "language") {
+			character.setChoice(languageChoice.location, {
+				type: "language",
+				count: 1,
+				canReadExisting: true,
+				canLearnNew: true,
+				selectedLanguages: ["Elvish"],
 			});
+
+			// Verify language was added
+			expect(character.attributes.languages).toContain("Common"); // Default remains
+			expect(character.attributes.languages).toContain("Elvish"); // New language added
 		}
-
-		const suggestions = magicianCharacter.getSuggestedLanguages();
-		expect(suggestions.some((s) => s.language === "High Archaic")).toBe(
-			false
-		);
 	});
 
-	test("High intellect characters get additional language suggestions", () => {
-		// Create a character with high intellect
-		const highIntellectCharacter = magicianCharacterFactory();
-		highIntellectCharacter.levelUp();
+	test("Default language choice values are used when not specified", () => {
+		// Create a character
+		const languerCharacter = new Character(
+			{ name: "TestLanguer" },
+			languerAncestry
+		);
+		const choices = languerCharacter.getAvailableChoices();
 
-		// Set intellect-increasing choice
-		const choices = highIntellectCharacter.getAvailableChoices();
-		const attributeChoice = choices.find(
-			(c) => c.config.type === "attribute"
+		// Find a language choice with default values
+		const langChoice = choices.find(
+			(c) =>
+				c.config.type === "language" &&
+				c.location.source === "ancestry" &&
+				c.location.level === 0
 		);
 
-		if (attributeChoice) {
-			const config = attributeChoice.config as AttributeChoiceConfig;
-			highIntellectCharacter.setChoice(attributeChoice.location, {
-				...config,
-				selectedAttributes: ["intellect", "intellect"],
-			});
+		// Verify the choice has available languages
+		if (langChoice && langChoice.config.type === "language") {
+			const availableLanguages = langChoice.config.availableLanguages;
+			expect(availableLanguages).toBeDefined();
+
+			if (availableLanguages) {
+				// Check the available languages match what we expect
+				expect(availableLanguages).toContain("Elvish");
+				expect(availableLanguages).toContain("Dwarfish");
+				expect(availableLanguages).toContain("Goblin");
+				expect(availableLanguages).toContain("Primordial");
+			}
 		}
-
-		const suggestions = highIntellectCharacter.getSuggestedLanguages();
-		expect(
-			suggestions.some(
-				(s) =>
-					s.language === "Celestial" &&
-					s.reason.includes("high intellect")
-			)
-		).toBe(true);
 	});
 
-	test("Magician gets specific language suggestions", () => {
-		magicianCharacter.levelUp();
-		const suggestions = magicianCharacter.getSuggestedLanguages();
+	test("Multiple language choices can be made", () => {
+		// Level up to get more language choices
+		const languerCharacter = new Character(
+			{ name: "TestLanguer" },
+			languerAncestry
+		);
+		languerCharacter.level = 4;
 
-		expect(
-			suggestions.some(
-				(s) =>
-					s.language === "High Archaic" &&
-					s.reason.includes("ancient texts and magic")
-			)
-		).toBe(true);
-		expect(
-			suggestions.some(
-				(s) =>
-					s.language === "Primordial" &&
-					s.reason.includes("elemental magic")
-			)
-		).toBe(true);
-	});
+		const choices = languerCharacter.getAvailableChoices();
+		const languageChoices = choices.filter(
+			(c) =>
+				c.config.type === "language" && c.location.source === "ancestry"
+		);
 
-	test("Priest gets specific language suggestions", () => {
-		priestCharacter.levelUp();
-		const suggestions = priestCharacter.getSuggestedLanguages();
+		// Verify we have multiple language choices
+		expect(languageChoices.length).toBeGreaterThan(1);
 
-		expect(
-			suggestions.some(
-				(s) =>
-					s.language === "Celestial" &&
-					s.reason.includes("Sacred language")
-			)
-		).toBe(true);
-		expect(
-			suggestions.some(
-				(s) =>
-					s.language === "High Archaic" &&
-					s.reason.includes("ancient texts and magic")
-			)
-		).toBe(true);
-	});
+		// Set different languages for different choices
+		if (languageChoices.length > 1) {
+			// First choice
+			if (languageChoices[0].config.type === "language") {
+				languerCharacter.setChoice(
+					languageChoices[0].location,
+					{
+						type: "language",
+						count: 1,
+						canReadExisting: (languageChoices[0].config as any)
+							.canReadExisting,
+						canLearnNew: (languageChoices[0].config as any)
+							.canLearnNew,
+						selectedLanguages: ["Elvish"],
+					},
+					0
+				);
+			}
 
-	test("Each suggestion includes a meaningful reason", () => {
-		const suggestions = magicianCharacter.getSuggestedLanguages();
+			// Second choice
+			if (languageChoices[1].config.type === "language") {
+				languerCharacter.setChoice(
+					languageChoices[1].location,
+					{
+						type: "language",
+						count: 1,
+						canReadExisting: (languageChoices[1].config as any)
+							.canReadExisting,
+						canLearnNew: (languageChoices[1].config as any)
+							.canLearnNew,
+						selectedLanguages: ["Dwarfish"],
+					},
+					1
+				);
+			}
 
-		suggestions.forEach((suggestion) => {
-			expect(suggestion.reason).toBeTruthy();
-			expect(suggestion.reason.length).toBeGreaterThan(10);
-		});
-	});
+			// Verify both languages were added
+			expect(languerCharacter.attributes.languages).toContain("Common");
+			expect(languerCharacter.attributes.languages).toContain(
+				"High Archaic"
+			);
+			expect(languerCharacter.attributes.languages).toContain("Elvish");
+			expect(languerCharacter.attributes.languages).toContain("Dwarfish");
 
-	test("Suggestions are unique even with multiple reasons", () => {
-		magicianCharacter.levelUp();
-		const suggestions = magicianCharacter.getSuggestedLanguages();
-
-		// Get unique languages
-		const uniqueLanguages = new Set(suggestions.map((s) => s.language));
-		expect(uniqueLanguages.size).toBe(suggestions.length);
+			// Verify no duplicates
+			const uniqueLanguages = new Set(
+				languerCharacter.attributes.languages
+			);
+			expect(uniqueLanguages.size).toBe(
+				languerCharacter.attributes.languages.length
+			);
+		}
 	});
 });

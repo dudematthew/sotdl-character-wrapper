@@ -13,14 +13,14 @@ describe("Magician Character", () => {
 	test("Initial magician character attributes", () => {
 		const attrs = character.attributes;
 		expect(attrs.power).toBe(0); // Starts at 0 before leveling
-		expect(attrs.health).toBe(10); // Base human health
+		expect(attrs.health).toBe(11); // Base human health (10) + default strength increase (+1)
 	});
 
 	test("Level 1 magician abilities", () => {
 		character.levelUp();
 		const attrs = character.attributes;
 		expect(attrs.power).toBe(1);
-		expect(attrs.health).toBe(12); // Base 10 + 2 from level 1
+		expect(attrs.health).toBe(13); // Base 11 + 2 from level 1 magician
 
 		// Check for Sense Magic skill
 		expect(attrs.skills.some((skill) => skill.name === "Sense Magic")).toBe(
@@ -97,7 +97,7 @@ describe("Magician Character", () => {
 		character.levelUp();
 		const attrs = character.attributes;
 		expect(attrs.power).toBe(1);
-		expect(attrs.health).toBe(14); // Base 10 + 2 + 2
+		expect(attrs.health).toBe(15); // Base 11 + 2 + 2
 
 		// Check for Spell Recovery
 		expect(
@@ -131,7 +131,7 @@ describe("Magician Character", () => {
 		for (let i = 0; i < 5; i++) character.levelUp();
 		const attrs = character.attributes;
 		expect(attrs.power).toBe(2);
-		expect(attrs.health).toBe(21); // Base 10 + (2 * 5) + ancestry bonus at level 4
+		expect(attrs.health).toBe(22); // Base 11 + (2 * 5) + ancestry bonus at level 4
 
 		// Check for Counterspell
 		expect(
@@ -167,7 +167,7 @@ describe("Magician Character", () => {
 		for (let i = 0; i < 8; i++) character.levelUp();
 		const attrs = character.attributes;
 		expect(attrs.power).toBe(2);
-		expect(attrs.health).toBe(23); // Base 10 + (2 * 8) + ancestry bonus at level 4
+		expect(attrs.health).toBe(24); // Base 11 + (2 * 8) + ancestry bonus at level 4
 
 		// Check for Improved Spell Recovery
 		expect(
@@ -265,18 +265,26 @@ describe("Magician Character", () => {
 		expect(spellChoice).toBeDefined();
 		if (spellChoice && spellChoice.config.type === "spell") {
 			// First choice must be tradition discovery
-			character.setChoice(spellChoice.location, {
-				...spellChoice.config,
-				selectedChoices: [
-					{
-						type: "discoverTradition",
-						traditionId: "magician",
-					},
-				],
-			});
+			character.setChoice(
+				spellChoice.location,
+				{
+					...spellChoice.config,
+					selectedChoices: [
+						{
+							type: "discoverTradition",
+							traditionId: "magician",
+						},
+					],
+				},
+				0
+			);
 
 			// Verify the choice was saved
-			const savedChoice = character.getChoice(spellChoice.location);
+			const savedChoice = character.getChoice(
+				spellChoice.location,
+				"spell",
+				0
+			);
 			expect(savedChoice).toBeDefined();
 			if (savedChoice && savedChoice.type === "spell") {
 				const firstChoice = savedChoice.selectedChoices?.[0];
@@ -287,22 +295,30 @@ describe("Magician Character", () => {
 			}
 
 			// Second choice can be either tradition or spell (flexible)
-			character.setChoice(spellChoice.location, {
-				...spellChoice.config,
-				selectedChoices: [
-					{
-						type: "discoverTradition",
-						traditionId: "magician",
-					},
-					{
-						type: "learnSpell",
-						spellId: "senseMagic",
-					},
-				],
-			});
+			character.setChoice(
+				spellChoice.location,
+				{
+					...spellChoice.config,
+					selectedChoices: [
+						{
+							type: "discoverTradition",
+							traditionId: "magician",
+						},
+						{
+							type: "learnSpell",
+							spellId: "senseMagic",
+						},
+					],
+				},
+				0
+			);
 
 			// Verify both choices were saved
-			const savedChoices = character.getChoice(spellChoice.location);
+			const savedChoices = character.getChoice(
+				spellChoice.location,
+				"spell",
+				0
+			);
 			if (savedChoices && savedChoices.type === "spell") {
 				expect(savedChoices.selectedChoices?.length).toBe(2);
 				expect(savedChoices.selectedChoices?.[0].type).toBe(
@@ -327,17 +343,25 @@ describe("Magician Character", () => {
 		expect(spellChoice).toBeDefined();
 		if (spellChoice && spellChoice.config.type === "spell") {
 			// Can choose to discover tradition
-			character.setChoice(spellChoice.location, {
-				...spellChoice.config,
-				selectedChoices: [
-					{
-						type: "discoverTradition",
-						traditionId: "magician",
-					},
-				],
-			});
+			character.setChoice(
+				spellChoice.location,
+				{
+					...spellChoice.config,
+					selectedChoices: [
+						{
+							type: "discoverTradition",
+							traditionId: "magician",
+						},
+					],
+				},
+				0
+			);
 
-			let savedChoice = character.getChoice(spellChoice.location);
+			let savedChoice = character.getChoice(
+				spellChoice.location,
+				"spell",
+				0
+			);
 			expect(savedChoice).toBeDefined();
 			if (savedChoice && savedChoice.type === "spell") {
 				expect(savedChoice.selectedChoices?.[0].type).toBe(
@@ -346,17 +370,21 @@ describe("Magician Character", () => {
 			}
 
 			// Or can choose to learn spell
-			character.setChoice(spellChoice.location, {
-				...spellChoice.config,
-				selectedChoices: [
-					{
-						type: "learnSpell",
-						spellId: "senseMagic",
-					},
-				],
-			});
+			character.setChoice(
+				spellChoice.location,
+				{
+					...spellChoice.config,
+					selectedChoices: [
+						{
+							type: "learnSpell",
+							spellId: "senseMagic",
+						},
+					],
+				},
+				0
+			);
 
-			savedChoice = character.getChoice(spellChoice.location);
+			savedChoice = character.getChoice(spellChoice.location, "spell", 0);
 			expect(savedChoice).toBeDefined();
 			if (savedChoice && savedChoice.type === "spell") {
 				expect(savedChoice.selectedChoices?.[0].type).toBe(
@@ -383,21 +411,29 @@ describe("Magician Character", () => {
 			).toBe(true);
 
 			// Set both spell choices
-			character.setChoice(spellChoice.location, {
-				...spellChoice.config,
-				selectedChoices: [
-					{
-						type: "learnSpell",
-						spellId: "senseMagic",
-					},
-					{
-						type: "learnSpell",
-						spellId: "senseMagic",
-					},
-				],
-			});
+			character.setChoice(
+				spellChoice.location,
+				{
+					...spellChoice.config,
+					selectedChoices: [
+						{
+							type: "learnSpell",
+							spellId: "senseMagic",
+						},
+						{
+							type: "learnSpell",
+							spellId: "senseMagic",
+						},
+					],
+				},
+				0
+			);
 
-			const savedChoice = character.getChoice(spellChoice.location);
+			const savedChoice = character.getChoice(
+				spellChoice.location,
+				"spell",
+				0
+			);
 			expect(savedChoice).toBeDefined();
 			if (savedChoice && savedChoice.type === "spell") {
 				expect(savedChoice.selectedChoices?.length).toBe(2);

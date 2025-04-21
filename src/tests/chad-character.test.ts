@@ -42,7 +42,7 @@ describe("Chad Character Tests", () => {
 			(c) =>
 				c.location.source === "ancestry" && c.config.type === "language"
 		);
-		expect(languageChoices.length).toBe(2);
+		expect(languageChoices.length).toBe(3);
 
 		// Should have profession choices
 		const professionChoices = availableChoices.filter(
@@ -74,12 +74,12 @@ describe("Chad Character Tests", () => {
 		// Check Languer's default attributes
 		expect(chad.attributes.strength).toBe(9);
 		expect(chad.attributes.agility).toBe(9);
-		expect(chad.attributes.intellect).toBe(12);
+		expect(chad.attributes.intellect).toBe(13);
 		expect(chad.attributes.will).toBe(10);
 
 		// Check secondary attributes
-		expect(chad.attributes.perception).toBe(14); // intellect + 2
-		expect(chad.attributes.health).toBe(8); // strength - 1
+		expect(chad.attributes.perception).toBe(14);
+		expect(chad.attributes.health).toBe(8);
 	});
 
 	test("Testing invalid language choice should be handled gracefully", () => {

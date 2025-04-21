@@ -26,6 +26,23 @@ Each character choice has several components:
 
 The system dynamically calculates available choices based on the character's current configuration and level. This means that changing a character's ancestry or path will update their available choices.
 
+<<<<<<< HEAD
+=======
+### Ancestry vs. Path Choices
+
+There's an important distinction in how choices work between ancestries and paths:
+
+- **Ancestry Choices**: Ancestries can provide choices at two points:
+  - **Initial Choices**: Available at character creation (level 0) for initial customization
+  - **Level 4 Choices**: Additional choices that become available when the character reaches level 4
+
+- **Path Choices**: Paths provide choices at specific levels as the character progresses.
+
+This distinction reflects the fundamental difference between ancestries and paths:
+- **Ancestries** establish **rules** for how attributes behave throughout a character's life
+- **Paths** provide **modifiers** that change attributes at specific levels
+
+>>>>>>> main
 ### Code References
 
 - [ChoiceLocation Interface](../src/types/index.ts) - Defines the source and level of a choice
@@ -177,6 +194,7 @@ const myAncestry = new Ancestry(
 
 ### Example: Setting Choices in a Factory
 
+<<<<<<< HEAD
 When creating characters programmatically, you can set choices using the `setChoice` method:
 
 ```typescript
@@ -276,3 +294,6 @@ npx jest src/test/language-validation.test.ts
 - [Character.ts](../src/character/Character.ts) - Core implementation of the choice system
 - [Ancestry.ts](../src/character/Ancestry.ts) - How ancestries provide choices
 - [types/index.ts](../src/types/index.ts) - Definitions for choice configurations 
+=======
+When creating characters programmatically, you can set choices using the `
+>>>>>>> main

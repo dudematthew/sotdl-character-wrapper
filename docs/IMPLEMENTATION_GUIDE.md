@@ -95,12 +95,46 @@ const dwarfAncestry = new Ancestry(
                 ]
             }
         ]
+<<<<<<< HEAD
     )
+=======
+    ),
+    
+    // Level 0 choices (available at character creation)
+    [
+        // Initial language choice
+        {
+            type: "language",
+            count: 1,
+            availableLanguages: ["High Dwarvish", "Goblin", "Trollish"],
+            canReadExisting: false,
+            canLearnNew: true
+        },
+        // Initial attribute choice
+        {
+            type: "attribute",
+            count: 1,
+            increaseBy: 1,
+            availableAttributes: ["strength", "will"],
+            defaultAttributes: ["strength"]
+        }
+    ]
+>>>>>>> main
 );
 
 export default dwarfAncestry;
 ```
 
+<<<<<<< HEAD
+=======
+### Key Components of an Ancestry
+
+1. **Base Attributes**: Define the starting attribute values for the ancestry.
+2. **Secondary Attribute Rules**: Define how secondary attributes are calculated from the main attributes.
+3. **Level 4 Modifier**: Define modifiers that are applied when the character reaches level 4.
+4. **Level 0 Choices**: Define choices that are available at character creation (level 0).
+
+>>>>>>> main
 ### Step 3: Register the Ancestry (if needed)
 
 If you have a registry system, make sure to register your new ancestry there.
