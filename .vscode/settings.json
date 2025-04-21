@@ -1,0 +1,10 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "./src/data/ancestries/*.json"
+      ],
+      "url": "src/data/schemas/ancestry-schema.json"
+    }
+  ]
+}

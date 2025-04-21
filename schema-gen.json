@@ -1,0 +1,10 @@
+{
+    "schemas": [
+        {
+            "sourcePath": "./src/serialization/types.ts",
+            "sourceType": "AncestrySchema",
+            "outputPath": "./src/data/schemas/ancestry-schema.json",
+            "targetPattern": "./src/data/ancestries/*.json"
+        }
+    ]
+}

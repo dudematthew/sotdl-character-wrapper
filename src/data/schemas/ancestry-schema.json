@@ -1,0 +1,286 @@
+{
+  "$ref": "#/definitions/AncestrySchema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AncestrySchema": {
+      "additionalProperties": false,
+      "description": "Represents a serialized ancestry in JSON format",
+      "properties": {
+        "baseAttributes": {
+          "$ref": "#/definitions/mainAttributes"
+        },
+        "levelBenefits": {
+          "$ref": "#/definitions/AttributeModifierSchema"
+        },
+        "name": {
+          "type": "string"
+        },
+        "secondaryAttributes": {
+          "additionalProperties": false,
+          "properties": {
+            "corruption": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "damage": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "defense": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "healingRate": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "health": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "insanity": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "languages": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "perception": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "power": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "professions": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "size": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            },
+            "skills": {
+              "items": {
+                "$ref": "#/definitions/Skill"
+              },
+              "type": "array"
+            },
+            "speed": {
+              "$ref": "#/definitions/AttributeCalculationSchema"
+            }
+          },
+          "required": [
+            "corruption",
+            "damage",
+            "defense",
+            "healingRate",
+            "health",
+            "insanity",
+            "languages",
+            "perception",
+            "power",
+            "professions",
+            "size",
+            "skills",
+            "speed"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "name",
+        "baseAttributes",
+        "secondaryAttributes",
+        "levelBenefits"
+      ],
+      "type": "object"
+    },
+    "AttributeBasedCalculationSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "modifier": {
+          "type": "number"
+        },
+        "operation": {
+          "enum": [
+            "add",
+            "subtract",
+            "multiply",
+            "divide"
+          ],
+          "type": "string"
+        },
+        "sourceAttribute": {
+          "enum": [
+            "strength",
+            "agility",
+            "intellect",
+            "will",
+            "perception",
+            "defense",
+            "health",
+            "healingRate",
+            "size",
+            "speed",
+            "power",
+            "damage",
+            "insanity",
+            "corruption"
+          ],
+          "type": "string"
+        },
+        "type": {
+          "const": "attributeBased",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sourceAttribute",
+        "type"
+      ],
+      "type": "object"
+    },
+    "AttributeCalculationSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/FixedAttributeCalculationSchema"
+        },
+        {
+          "$ref": "#/definitions/AttributeBasedCalculationSchema"
+        },
+        {
+          "$ref": "#/definitions/FormulaCalculationSchema"
+        }
+      ]
+    },
+    "AttributeModifierSchema": {
+      "additionalProperties": false,
+      "description": "Serialized version of AttributeModifier",
+      "properties": {
+        "choices": {
+          "$ref": "#/definitions/ChoiceConfigSchema"
+        },
+        "modifiers": {
+          "$ref": "#/definitions/Record%3Cstring%2Cany%3E"
+        }
+      },
+      "required": [
+        "modifiers"
+      ],
+      "type": "object"
+    },
+    "ChoiceConfigSchema": {
+      "additionalProperties": false,
+      "description": "Serialized choice configuration",
+      "properties": {
+        "availableSkills": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "description": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "description"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "count": {
+          "type": "number"
+        },
+        "type": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "count"
+      ],
+      "type": "object"
+    },
+    "FixedAttributeCalculationSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "const": "fixed",
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ],
+      "type": "object"
+    },
+    "FormulaCalculationSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "formula": {
+          "type": "string"
+        },
+        "type": {
+          "const": "formula",
+          "type": "string"
+        }
+      },
+      "required": [
+        "formula",
+        "type"
+      ],
+      "type": "object"
+    },
+    "Record<string,any>": {
+      "type": "object"
+    },
+    "Skill": {
+      "additionalProperties": false,
+      "description": "Represents a skill that a character can possess",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "type": "object"
+    },
+    "mainAttributes": {
+      "additionalProperties": false,
+      "description": "Core attributes that define a character's basic capabilities",
+      "properties": {
+        "agility": {
+          "type": "number"
+        },
+        "intellect": {
+          "type": "number"
+        },
+        "strength": {
+          "type": "number"
+        },
+        "will": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "strength",
+        "agility",
+        "intellect",
+        "will"
+      ],
+      "type": "object"
+    }
+  }
+}

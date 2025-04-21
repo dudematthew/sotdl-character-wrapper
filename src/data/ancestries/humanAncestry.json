@@ -1,0 +1,58 @@
+{
+    "$schema": "../schemas/ancestry-schema.json",
+    "name": "Human",
+    "baseAttributes": {
+        "strength": 10,
+        "agility": 10,
+        "intellect": 10,
+        "will": 10
+    },
+    "secondaryAttributes": {
+        "perception": {
+            "type": "attributeBased",
+            "sourceAttribute": "intellect"
+        },
+        "defense": {
+            "type": "attributeBased",
+            "sourceAttribute": "agility"
+        },
+        "health": {
+            "type": "attributeBased",
+            "sourceAttribute": "strength"
+        },
+        "healingRate": {
+            "type": "attributeBased",
+            "sourceAttribute": "health"
+        },
+        "size": {
+            "type": "fixed",
+            "value": 1
+        },
+        "speed": {
+            "type": "fixed",
+            "value": 10
+        },
+        "power": {
+            "type": "fixed",
+            "value": 0
+        },
+        "damage": {
+            "type": "fixed",
+            "value": 0
+        },
+        "insanity": {
+            "type": "fixed",
+            "value": 0
+        },
+        "corruption": {
+            "type": "fixed",
+            "value": 0
+        },
+        "languages": [
+            "Common"
+        ],
+        "professions": [],
+        "skills": []
+    },
+    "levelBenefits": {}
+}

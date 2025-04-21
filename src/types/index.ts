@@ -25,10 +25,8 @@ export interface mainAttributes {
 	will: number;
 }
 
-/**
- * Derived attributes that are calculated from main attributes
- */
-export interface secondaryAttributes {
+// Split secondary attributes by return type
+export interface NumericSecondaryAttributes {
 	perception: number;
 	defense: number;
 	health: number;
@@ -39,10 +37,25 @@ export interface secondaryAttributes {
 	damage: number;
 	insanity: number;
 	corruption: number;
+}
+
+export interface ArraySecondaryAttributes {
 	languages: string[];
 	professions: string[];
+}
+
+export interface ComplexSecondaryAttributes {
 	skills: Skill[];
 }
+
+/**
+ * Derived attributes that are calculated from main attributes
+ */
+// Combine them in the main interface
+export interface secondaryAttributes
+	extends NumericSecondaryAttributes,
+		ArraySecondaryAttributes,
+		ComplexSecondaryAttributes {}
 
 /**
  * Combined interface of all character attributes
