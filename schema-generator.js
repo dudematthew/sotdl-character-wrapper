@@ -1,16 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
-const config = require('./schema-gen.json');
+const config = require('./schema-gen.config.json');
 
 // Create schemas directory if it doesn't exist
-const schemasDir = path.dirname(config.schemas[0].outputPath);
+const schemasDir = path.dirname(config.schemaGenerationConfig[0].outputPath);
 if (!fs.existsSync(schemasDir)) {
     fs.mkdirSync(schemasDir, { recursive: true });
 }
 
 // Generate each schema using ts-json-schema-generator
-config.schemas.forEach(schema => {
+config.schemaGenerationConfig.forEach(schema => {
     const command = `npx ts-json-schema-generator --path "${schema.sourcePath}" --type ${schema.sourceType} --out ${schema.outputPath} --no-type-check --expose all`;
 
     console.log(`Generating schema: ${schema.outputPath}`);
@@ -96,7 +96,7 @@ function updateVSCodeSettings(filePattern, schemaPath) {
 
 // Function to add schema references to the JSON files
 function addSchemaRefToJsonFiles() {
-    config.schemas.forEach(schema => {
+    config.schemaGenerationConfig.forEach(schema => {
         if (!schema.targetPattern) return;
 
         // Find matching JSON files using glob
@@ -155,7 +155,7 @@ function addSchemaRefToJsonFiles() {
 }
 
 // Execute the function to add schema references if any file patterns are defined
-if (config.schemas.some(schema => schema.targetPattern)) {
+if (config.schemaGenerationConfig.some(schema => schema.targetPattern)) {
     // Check if glob is installed
     try {
         require.resolve('glob');

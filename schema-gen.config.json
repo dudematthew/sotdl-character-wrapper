@@ -1,5 +1,5 @@
 {
-    "schemas": [
+    "schemaGenerationConfig": [
         {
             "sourcePath": "./src/serialization/types.ts",
             "sourceType": "AncestrySchema",
