@@ -3,8 +3,10 @@ import {
 	NumericSecondaryAttributes,
 	ArraySecondaryAttributes,
 	ComplexSecondaryAttributes,
+	Skill,
 } from "../types";
 import { AttributeCalculationSchema } from "./attributeCalculationSchema";
+import { ChoiceConfigSchema } from "./choiceConfigSchema";
 
 /**
  * Represents a serialized ancestry in JSON format
@@ -19,23 +21,14 @@ export interface AncestrySchema {
 	} & {
 		[K in keyof ComplexSecondaryAttributes]: ComplexSecondaryAttributes[K];
 	};
+	initialChoices?: ChoiceConfigSchema[];
 	levelBenefits: AttributeModifierSchema;
 }
+
 /**
  * Serialized version of AttributeModifier
  */
 export interface AttributeModifierSchema {
 	modifiers: Record<string, any>;
-	choices?: ChoiceConfigSchema;
-}
-
-/**
- * Serialized choice configuration
- */
-export interface ChoiceConfigSchema {
-	type: string;
-	count: number;
-	// Other properties depending on choice type
-	availableSkills?: Array<{ name: string; description: string }>;
-	// ... other choice properties
+	choices?: ChoiceConfigSchema[];
 }
