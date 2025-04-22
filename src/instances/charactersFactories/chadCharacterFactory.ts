@@ -1,7 +1,7 @@
-import { Character } from "../character";
-import languerAncestry from "../instances/ancestries/LanguerAncestry";
-import magicianNovicePath from "../instances/paths/novice/magicianNovicePath";
-import { LanguageChoiceConfig, ProfessionChoiceConfig } from "../types";
+import { Character } from "../../character";
+import languerAncestry from "../ancestries/LanguerAncestry";
+import magicianNovicePath from "../paths/novice/magicianNovicePath";
+import { LanguageChoiceConfig, ProfessionChoiceConfig } from "../../types";
 
 /**
  * Factory to create a character named Chad with Languer ancestry
