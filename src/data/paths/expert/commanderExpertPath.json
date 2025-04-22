@@ -1,0 +1,68 @@
+{
+    "$schema": "../../schemas/expert-path-schema.json",
+    "name": "Commander",
+    "type": "expert",
+    "description": "A path focused on leadership and inspiring allies in battle",
+    "level3": {
+        "modifiers": {
+            "health": 3,
+            "languages": [
+                "High Archaic"
+            ],
+            "professions": [
+                "Officer"
+            ],
+            "skills": [
+                {
+                    "name": "Battlefield Presence",
+                    "description": "Allied creatures within 5 yards of you can use a triggered action once per round to make challenge rolls with 1 boon to resist becoming frightened or to overcome the frightened affliction."
+                },
+                {
+                    "name": "Rally",
+                    "description": "You can use an action to choose one creature within short range that can see and hear you. The creature can immediately make a Will challenge roll with 1 boon. On a success, it removes one of the following afflictions from itself: charmed, frightened, stunned, or dazed. Once you use this talent, you cannot use it again until after you complete a rest."
+                }
+            ]
+        },
+        "choices": [
+            {
+                "type": "attribute",
+                "count": 2,
+                "increaseBy": 1,
+                "defaultAttributes": [
+                    "intellect",
+                    "will"
+                ]
+            }
+        ]
+    },
+    "level6": {
+        "modifiers": {
+            "health": 3,
+            "skills": [
+                {
+                    "name": "Combat Leader",
+                    "description": "You and allied creatures within 5 yards can use a triggered action to stand up from being prone without spending half their Speed."
+                },
+                {
+                    "name": "Quick Orders",
+                    "description": "You can use Rally as a triggered action on your turn. Once you use this talent, you cannot use it again until after you complete a rest."
+                }
+            ]
+        }
+    },
+    "level9": {
+        "modifiers": {
+            "health": 3,
+            "skills": [
+                {
+                    "name": "Battlefield Commander",
+                    "description": "You can use an action to choose up to three different allied creatures within 10 yards of you. Each chosen creature can immediately use a triggered action to make one attack, move up to half its Speed, or stand up. Once you use this talent, you cannot use it again until after you complete a rest."
+                },
+                {
+                    "name": "Leading by Example",
+                    "description": "When you score an exceptional success on an attack roll, one allied creature of your choice within 5 yards of you can make one attack against a target you can see within its reach or range by using a triggered action."
+                }
+            ]
+        }
+    }
+}

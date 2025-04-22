@@ -1,0 +1,62 @@
+{
+    "$schema": "../../schemas/master-path-schema.json",
+    "name": "Archmage",
+    "type": "master",
+    "description": "A master of arcane power, capable of devastating spellcasting",
+    "level7": {
+        "modifiers": {
+            "power": 1,
+            "health": 3,
+            "skills": [
+                {
+                    "name": "Arcane Mastery",
+                    "description": "When you cast a spell, you make the attack roll with 1 boon. In addition, when a creature rolls a challenge roll against one of your spells, it does so with 1 bane."
+                },
+                {
+                    "name": "Improved Spell Recovery",
+                    "description": "When you use an action or your Spell Recovery talent to recover Power, you recover 2 Power instead of the usual amount. If you would recover more than 2 Power, you recover that amount instead."
+                }
+            ]
+        },
+        "choices": [
+            {
+                "type": "attribute",
+                "count": 2,
+                "increaseBy": 1,
+                "defaultAttributes": [
+                    "intellect",
+                    "will"
+                ]
+            }
+        ]
+    },
+    "level10": {
+        "modifiers": {
+            "power": 1,
+            "health": 3,
+            "skills": [
+                {
+                    "name": "Arcane Might",
+                    "description": "When you cast a spell that deals damage, you deal extra damage equal to your Power."
+                },
+                {
+                    "name": "Greater Counterspell",
+                    "description": "When you use Counterspell, the attacking creature makes the spellcasting roll with 1 bane when it targets you and with 3 banes when it targets a creature other than you within 10 yards of you."
+                }
+            ]
+        },
+        "choices": [
+            {
+                "type": "spell",
+                "count": 1,
+                "choices": [
+                    {
+                        "type": "discoverTradition",
+                        "description": "You discover one tradition of magic."
+                    }
+                ],
+                "specificSpells": []
+            }
+        ]
+    }
+}

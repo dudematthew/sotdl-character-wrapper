@@ -5,6 +5,24 @@
         "./src/data/ancestries/*.json"
       ],
       "url": "src/data/schemas/ancestry-schema.json"
+    },
+    {
+      "fileMatch": [
+        "./src/data/paths/master/*.json"
+      ],
+      "url": "src/data/schemas/master-path-schema.json"
+    },
+    {
+      "fileMatch": [
+        "./src/data/paths/expert/*.json"
+      ],
+      "url": "src/data/schemas/expert-path-schema.json"
+    },
+    {
+      "fileMatch": [
+        "./src/data/paths/novice/*.json"
+      ],
+      "url": "src/data/schemas/novice-path-schema.json"
     }
   ]
 }

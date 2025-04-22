@@ -1,10 +1,28 @@
 {
     "schemaGenerationConfig": [
         {
-            "sourcePath": "./src/serialization/types.ts",
+            "sourcePath": "./src/serialization/serializationSchema.ts",
             "sourceType": "AncestrySchema",
             "outputPath": "./src/data/schemas/ancestry-schema.json",
             "targetPattern": "./src/data/ancestries/*.json"
+        },
+        {
+            "sourcePath": "./src/serialization/pathSchema.ts",
+            "sourceType": "NovicePathSchema",
+            "outputPath": "./src/data/schemas/novice-path-schema.json",
+            "targetPattern": "./src/data/paths/novice/*.json"
+        },
+        {
+            "sourcePath": "./src/serialization/pathSchema.ts",
+            "sourceType": "ExpertPathSchema",
+            "outputPath": "./src/data/schemas/expert-path-schema.json",
+            "targetPattern": "./src/data/paths/expert/*.json"
+        },
+        {
+            "sourcePath": "./src/serialization/pathSchema.ts",
+            "sourceType": "MasterPathSchema",
+            "outputPath": "./src/data/schemas/master-path-schema.json",
+            "targetPattern": "./src/data/paths/master/*.json"
         }
     ]
 }

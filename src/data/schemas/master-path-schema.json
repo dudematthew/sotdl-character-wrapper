@@ -1,0 +1,370 @@
+{
+  "$ref": "#/definitions/MasterPathSchema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AttributeChoiceConfigSchema": {
+      "additionalProperties": false,
+      "description": "Serialized configuration for attribute choices",
+      "properties": {
+        "availableAttributes": {
+          "items": {
+            "enum": [
+              "strength",
+              "agility",
+              "intellect",
+              "will"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "count": {
+          "type": "number"
+        },
+        "defaultAttributes": {
+          "items": {
+            "enum": [
+              "strength",
+              "agility",
+              "intellect",
+              "will"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "increaseBy": {
+          "type": "number"
+        },
+        "selectedAttributes": {
+          "items": {
+            "enum": [
+              "strength",
+              "agility",
+              "intellect",
+              "will"
+            ],
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "attribute",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "count",
+        "increaseBy"
+      ],
+      "type": "object"
+    },
+    "AttributeModifierSchema": {
+      "additionalProperties": false,
+      "description": "Serialized version of AttributeModifier",
+      "properties": {
+        "choices": {
+          "items": {
+            "$ref": "#/definitions/ChoiceConfigSchema"
+          },
+          "type": "array"
+        },
+        "modifiers": {
+          "$ref": "#/definitions/Record%3Cstring%2Cany%3E"
+        }
+      },
+      "required": [
+        "modifiers"
+      ],
+      "type": "object"
+    },
+    "ChoiceConfigSchema": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/AttributeChoiceConfigSchema"
+        },
+        {
+          "$ref": "#/definitions/SkillChoiceConfigSchema"
+        },
+        {
+          "$ref": "#/definitions/ProfessionChoiceConfigSchema"
+        },
+        {
+          "$ref": "#/definitions/SpellChoiceConfigSchema"
+        },
+        {
+          "$ref": "#/definitions/LanguageChoiceConfigSchema"
+        }
+      ],
+      "description": "Serialized choice configuration"
+    },
+    "LanguageChoiceConfigSchema": {
+      "additionalProperties": false,
+      "description": "Serialized configuration for language choices",
+      "properties": {
+        "availableLanguages": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "canLearnNew": {
+          "type": "boolean"
+        },
+        "canReadExisting": {
+          "type": "boolean"
+        },
+        "count": {
+          "type": "number"
+        },
+        "selectedLanguages": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "language",
+          "type": "string"
+        },
+        "writingPreferences": {
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "type",
+        "count",
+        "canReadExisting",
+        "canLearnNew"
+      ],
+      "type": "object"
+    },
+    "MasterPathSchema": {
+      "additionalProperties": false,
+      "description": "Schema for master paths",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "level10": {
+          "$ref": "#/definitions/AttributeModifierSchema"
+        },
+        "level7": {
+          "$ref": "#/definitions/AttributeModifierSchema"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "const": "master",
+          "type": "string"
+        }
+      },
+      "required": [
+        "level10",
+        "level7",
+        "name",
+        "type"
+      ],
+      "type": "object"
+    },
+    "ProfessionChoiceConfigSchema": {
+      "additionalProperties": false,
+      "description": "Serialized configuration for profession choices",
+      "properties": {
+        "availableProfessions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "count": {
+          "type": "number"
+        },
+        "defaultProfessions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "selectedProfessions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "profession",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "count",
+        "availableProfessions"
+      ],
+      "type": "object"
+    },
+    "Record<string,any>": {
+      "type": "object"
+    },
+    "Skill": {
+      "additionalProperties": false,
+      "description": "Represents a skill that a character can possess",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description"
+      ],
+      "type": "object"
+    },
+    "SkillChoiceConfigSchema": {
+      "additionalProperties": false,
+      "description": "Serialized configuration for skill choices",
+      "properties": {
+        "availableSkills": {
+          "items": {
+            "$ref": "#/definitions/Skill"
+          },
+          "type": "array"
+        },
+        "count": {
+          "type": "number"
+        },
+        "selectedSkills": {
+          "items": {
+            "$ref": "#/definitions/Skill"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "skill",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "count",
+        "availableSkills"
+      ],
+      "type": "object"
+    },
+    "SpellChoiceConfigSchema": {
+      "additionalProperties": false,
+      "description": "Represents a serialized spell choice configuration in JSON format Designed to be converted back to functional code via function factories",
+      "properties": {
+        "choices": {
+          "items": {
+            "$ref": "#/definitions/SpellChoiceTypeSchema"
+          },
+          "type": "array"
+        },
+        "count": {
+          "type": "number"
+        },
+        "selectedChoices": {
+          "items": {
+            "$ref": "#/definitions/SpellChoiceOptionSchema"
+          },
+          "type": "array"
+        },
+        "specificSpells": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "const": "spell",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "count",
+        "choices"
+      ],
+      "type": "object"
+    },
+    "SpellChoiceOptionSchema": {
+      "anyOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "spellId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "learnSpell",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "spellId"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "traditionId": {
+              "type": "string"
+            },
+            "type": {
+              "const": "discoverTradition",
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "traditionId"
+          ],
+          "type": "object"
+        }
+      ],
+      "description": "Schema for representing selected spell choice options in JSON"
+    },
+    "SpellChoiceTypeSchema": {
+      "additionalProperties": false,
+      "description": "Schema for representing spell choice types in JSON",
+      "properties": {
+        "defaultChoice": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "restrictToTraditions": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "type": {
+          "enum": [
+            "discoverTradition",
+            "learnSpell",
+            "flexibleChoice"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    }
+  }
+}

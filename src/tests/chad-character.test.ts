@@ -1,4 +1,4 @@
-import { ChadCharacterFactory } from "../instances/charactersFactories/ChadCharacterFactory";
+import { ChadCharacterFactory } from "../instances/charactersFactories/chadCharacterFactory";
 
 describe("Chad Character Tests", () => {
 	test("Base Chad should have default languages and professions", () => {

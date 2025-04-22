@@ -1,0 +1,48 @@
+{
+    "$schema": "../../schemas/master-path-schema.json",
+    "name": "Warlord",
+    "type": "master",
+    "description": "A master of warfare and battlefield tactics, inspiring allies to victory",
+    "level7": {
+        "modifiers": {
+            "health": 5,
+            "skills": [
+                {
+                    "name": "Battlefield Prowess",
+                    "description": "When you make an attack roll against a creature, you do so with 1 boon if at least one of your allies is within 2 yards of the target."
+                },
+                {
+                    "name": "Tactical Command",
+                    "description": "You can use an action to choose up to three allies within medium range. Until the end of the round, when a chosen ally uses an action or a triggered action to attack, it makes the attack roll with 1 boon. Once you use this talent, you cannot use it again until after you complete a rest."
+                }
+            ]
+        },
+        "choices": [
+            {
+                "type": "attribute",
+                "count": 2,
+                "increaseBy": 1,
+                "defaultAttributes": [
+                    "strength",
+                    "will"
+                ]
+            }
+        ]
+    },
+    "level10": {
+        "modifiers": {
+            "health": 5,
+            "defense": 1,
+            "skills": [
+                {
+                    "name": "Strategic Mind",
+                    "description": "You can use Tactical Command twice between each rest. In addition, allies affected by Tactical Command deal 1d6 extra damage on successful attacks."
+                },
+                {
+                    "name": "Stand Against the Horde",
+                    "description": "When a creature attacks you, you can use a triggered action to make one attack against it. If the attack hits, the triggering attack has no effect on you."
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "../../schemas/novice-path-schema.json",
+  "name": "Magician",
+  "type": "novice",
+  "description": "A path focused on arcane magic and spellcasting",
+  "level1": {
+    "modifiers": {
+      "power": 1,
+      "skills": [
+        {
+          "name": "Powered by Magic",
+          "description": "When you use Power for a spell, you roll a number of d6s equal to 1 + the level of the spell instead of the normal number of d6s. For example, you roll 2d6 when you cast a level 1 spell. You can never have more than 5 Power."
+        },
+        {
+          "name": "Spellcasting",
+          "description": "You can cast spells. You learn one spell chosen from your tradition, of a level for which you have a spell slot. You also prepare all other spells available from your tradition."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "type": "spell",
+        "count": 1,
+        "choices": [
+          {
+            "type": "discoverTradition",
+            "description": "You discover one tradition of magic."
+          }
+        ]
+      }
+    ]
+  },
+  "level2": {
+    "modifiers": {
+      "power": 1,
+      "skills": [
+        {
+          "name": "Magic Sense",
+          "description": "You always sense the presence of magic within 1 yard of you."
+        }
+      ]
+    }
+  },
+  "level5": {
+    "modifiers": {
+      "power": 1,
+      "skills": [
+        {
+          "name": "Read Magic",
+          "description": "You can read text, regardless of the language in which it is written."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "type": "spell",
+        "count": 1,
+        "choices": [
+          {
+            "type": "discoverTradition",
+            "description": "You discover one tradition of magic."
+          }
+        ]
+      }
+    ]
+  },
+  "level8": {
+    "modifiers": {
+      "power": 1,
+      "skills": [
+        {
+          "name": "Improved Powered by Magic",
+          "description": "When you use Power for a spell, you roll a number of d6s equal to 2 + the level of the spell instead of the normal number of d6s. For example, you roll 3d6 when you cast a level 1 spell. You can never have more than 5 Power."
+        }
+      ]
+    }
+  }
+}

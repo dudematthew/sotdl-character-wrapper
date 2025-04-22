@@ -1,0 +1,65 @@
+{
+  "$schema": "../../schemas/expert-path-schema.json",
+  "name": "Berserker",
+  "type": "expert",
+  "description": "A path focused on unleashing primal fury in combat",
+  "level3": {
+    "modifiers": {
+      "health": 3,
+      "professions": [
+        "Barbarian"
+      ],
+      "skills": [
+        {
+          "name": "Rage",
+          "description": "You can use an action to become enraged for 1 minute. While you are enraged, you make attack rolls with 1 boon, and when you roll damage for a weapon attack, you roll an extra d6. Your rage ends early if you are incapacitated or if your turn ends and you didn't attack a hostile creature since your last turn. Once you use this talent, you cannot use it again until after you complete a rest."
+        },
+        {
+          "name": "Thick Skin",
+          "description": "You treat all damage you take as if it were 1 less."
+        }
+      ]
+    },
+    "choices": [
+      {
+        "type": "attribute",
+        "count": 2,
+        "increaseBy": 1,
+        "defaultAttributes": [
+          "strength",
+          "will"
+        ]
+      }
+    ]
+  },
+  "level6": {
+    "modifiers": {
+      "health": 3,
+      "skills": [
+        {
+          "name": "Danger Sense",
+          "description": "You make Perception challenge rolls to notice hidden or invisible creatures or objects with 1 boon. In addition, when you make an Agility challenge roll or an attack roll to avoid or reduce damage from an effect you can see, such as a trap or a spell, you make the roll with 1 boon."
+        },
+        {
+          "name": "Improved Rage",
+          "description": "When you use Rage, you can use it as a triggered action on your turn."
+        }
+      ]
+    }
+  },
+  "level9": {
+    "modifiers": {
+      "health": 3,
+      "skills": [
+        {
+          "name": "Frightening",
+          "description": "When you use Rage, each creature of your choice that can see you within 5 yards must make a Will challenge roll. On a failure, the creature becomes frightened for 1 minute or until your rage ends. While frightened, the creature must attack you on its turn if it can; if it can't, it does nothing on its turn except move away from you."
+        },
+        {
+          "name": "Unending Rage",
+          "description": "Your rage no longer ends if you don't attack a hostile creature since your last turn."
+        }
+      ]
+    }
+  }
+}
